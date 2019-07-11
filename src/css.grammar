@@ -1,0 +1,148 @@
+precedence {
+  directSelector left,
+  selector left,
+  valueOp left,
+  unit
+}
+
+skip { whitespace | Comment }
+
+top { item+ }
+
+item {
+  RuleSet |
+  ImportStatement |
+  MediaStatement |
+  CharsetStatement |
+  NamespaceStatement |
+  KeyframesStatement |
+  SupportsStatement |
+  AtRule
+}
+
+RuleSet { selector ("," selector)? Block }
+
+ImportStatement { specialize<AtKeyword, "@import"> value commaSep<query> ";" }
+
+MediaStatement { specialize<AtKeyword, "@media"> commaSep<query> Block }
+
+CharsetStatement { specialize<AtKeyword, "@charset"> value ";" }
+
+NamespaceStatement { specialize<AtKeyword, "@namespace"> tag.Def<identifier>? (StringLiteral | CallExpression) ";" }
+
+KeyframesStatement { specialize<AtKeyword, "@keyframes"> tag.Def<identifier> KeyframeList }
+
+KeyframeList { "{" ((kw<"from"> | kw<"to"> | NumberLiteral) Block)* "}" }
+
+SupportsStatement { specialize<AtKeyword, "@supports"> query Block }
+
+AtRule { AtKeyword commaSep<query> (";" | Block) }
+
+Block { "{" item* (Declaration (";" item* Declaration?)*)? "}" }
+
+selector {
+  UniversalSelector |
+  tag.TagName<identifier> |
+  NestingSelector |
+  tag.ClassSelector<(selector noSpace)? !selector "." tag.ClassName<identifier>> |
+  tag.PseudoClassSelector<(selector noSpace)? !selector (":" | "::") tag.ClassName<identifier | Callee ArgList<selector>>> |
+  tag.IdSelector<(selector noSpace)? !selector "#" tag.IdName<identifier>> |
+  tag.AttributeSelector<(selector noSpace)? !selector attributeDesc> |
+  tag.ChildSelector<selector !selector childOp selector> |
+  tag.DescendantSelector<selector !selector selector> |
+  tag.SiblingSelector<selector !selector siblingOp selector>
+}
+
+attributeDesc { "[" tag.AttributeName<identifier> (matchOp value)? "]" }
+
+ArgList<content> { "(" commaSep<content> ")" }
+
+Declaration {
+  PropertyName ":" value (","? value)* Important?
+}
+
+query {
+  tag.KeywordQuery<identifier> |
+  tag.FeatureQuery<"(" tag.FeatureName<identifier> ":" value+ ")"> |
+  tag.BinaryQuery<query !valueOp logicOp query> |
+  // FIXME tag.UnaryQuery<("not" | "only") query> |
+  tag.ParenthesizedQuery<"(" query ")"> //|
+//  tag.SelectorQuery<kw<"selector"> "(" selector ")"> FIXME
+}
+
+value {
+  tag.Value<identifier> |
+  tag.ParenthesizedValue<"(" value ")"> |
+  ColorLiteral |
+  NumberLiteral |
+  StringLiteral |
+  tag.BinaryExpression<value !valueOp binOp value> |
+  CallExpression |
+  tag.CallLiteral<specialize<Callee, "url" | "url-prefix" | "domain" | "regexp"> "(" (ParenthesizedContent | StringLiteral) ")">
+}
+
+CallExpression {
+  Callee ArgList<value+>
+}
+
+commaSep<value> { "" | value ("," value)* }
+
+kw<term> { specialize<identifier, term, Keyword> }
+
+skip {} {
+  NumberLiteral {
+    numberLiteral (!unit tag.Unit<"%" | identifier> | (whitespace | Comment)*)
+  }
+}
+
+external tokens identifiers from "./tokens" {
+  Callee,
+  PropertyName,
+  identifier
+}
+
+tokens {
+  UniversalSelector { "*" }
+
+  NestingSelector { "&" }
+
+  AtKeyword { "@" std.asciiLetter (std.asciiLetter | std.digit | "-")* }
+
+  matchOp=Operator { [~^|*$]? "=" }
+
+  childOp=Operator { ">" ">"? }
+
+  siblingOp=Operator { "~" | "+" }
+
+  logicOp=Operator { "and" | "or" }
+
+  binOp=Operator { [+\-*/] }
+
+  Important { "!important" }
+
+  whitespace { std.whitespace+ }
+
+  Comment { "/*" commentRest }
+
+  commentRest { [^*] commentRest | "*" commentAfterStar }
+
+  commentAfterStar { "/" | "*" commentAfterStar | [^/*] commentRest }
+
+  precedence { Comment, binOp }
+
+  hexDigit { std.digit | [a-fA-F] }
+
+  ParenthesizedContent { [^'")] [^)]+ }
+
+  precedence { whitespace, ParenthesizedContent, Comment }
+
+  ColorLiteral { "#" hexDigit hexDigit hexDigit (hexDigit (hexDigit hexDigit (hexDigit hexDigit)?)?)? }
+
+  numberLiteral { ("+" | "-")? (std.digit+ ("." std.digit*)? | "." std.digit+) (("e" | "E") ("+" | "-")? std.digit+)? }
+
+  precedence { numberLiteral, binOp, siblingOp }
+
+  StringLiteral { "\"" ([^"\n\\] | "\\" _)* "\"" | "'" ([^'\n\\] | "\\" _)* "'" }
+}
+
+external tokens checkSpace from "./tokens" { noSpace }
