@@ -1,8 +1,7 @@
 precedence {
-  directSelector left,
-  selector left,
-  valueOp left,
-  unit
+  attribute left,
+  structure left,
+  valueOp left
 }
 
 skip { whitespace | Comment }
@@ -20,7 +19,7 @@ item {
   AtRule
 }
 
-RuleSet { selector ("," selector)? Block }
+RuleSet { selector ("," selector)* Block }
 
 ImportStatement { specialize<AtKeyword, "@import"> value commaSep<query> ";" }
 
@@ -44,16 +43,18 @@ selector {
   UniversalSelector |
   tag.TagName<identifier> |
   NestingSelector |
-  tag.ClassSelector<(selector noSpace)? !selector "." tag.ClassName<identifier>> |
-  tag.PseudoClassSelector<(selector noSpace)? !selector (":" | "::") tag.ClassName<identifier | Callee ArgList<selector>>> |
-  tag.IdSelector<(selector noSpace)? !selector "#" tag.IdName<identifier>> |
-  tag.AttributeSelector<(selector noSpace)? !selector attributeDesc> |
-  tag.ChildSelector<selector !selector childOp selector> |
-  tag.DescendantSelector<selector !selector selector> |
-  tag.SiblingSelector<selector !selector siblingOp selector>
+  tag.ClassSelector<selector? !attribute "." tag.ClassName<identifier>> |
+  tag.PseudoClassSelector<selector? !attribute (":" | "::") tag.ClassName<identifier | Callee ArgList<selector>>> |
+  tag.IdSelector<selector? !attribute "#" tag.IdName<identifier>> |
+  tag.AttributeSelector<selector? !attribute "[" tag.AttributeName<identifier> (matchOp value)? "]"> |
+  tag.ChildSelector<selector !structure childOp selector> |
+  tag.DescendantSelector<selector !structure descendantSelector selector> |
+  tag.SiblingSelector<selector !structure siblingOp selector>
 }
 
-attributeDesc { "[" tag.AttributeName<identifier> (matchOp value)? "]" }
+NumberLiteral {
+  numberLiteral Unit?
+}
 
 ArgList<content> { "(" commaSep<content> ")" }
 
@@ -89,10 +90,12 @@ commaSep<value> { "" | value ("," value)* }
 
 kw<term> { specialize<identifier, term, Keyword> }
 
-skip {} {
-  NumberLiteral {
-    numberLiteral (!unit tag.Unit<"%" | identifier> | (whitespace | Comment)*)
-  }
+external tokens descendant from "./tokens" {
+  descendantSelector
+}
+
+external tokens unit from "./tokens" {
+  Unit
 }
 
 external tokens identifiers from "./tokens" {
@@ -145,4 +148,3 @@ tokens {
   StringLiteral { "\"" ([^"\n\\] | "\\" _)* "\"" | "'" ([^'\n\\] | "\\" _)* "'" }
 }
 
-external tokens checkSpace from "./tokens" { noSpace }

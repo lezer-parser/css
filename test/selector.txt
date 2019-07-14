@@ -1,0 +1,124 @@
+# Universal selectors
+
+* {}
+
+==>
+
+RuleSet(UniversalSelector, Block)
+
+# Type selectors
+
+div, span {}
+h1, h2, h3, h4 {}
+
+==>
+
+RuleSet(TagName, TagName, Block),
+RuleSet(TagName, TagName, TagName, TagName, Block)
+
+# Class selectors
+
+.class-a {}
+div.class-b, .class-c.class-d {}
+
+==>
+
+RuleSet(ClassSelector(ClassName), Block),
+RuleSet(ClassSelector(TagName, ClassName), ClassSelector(ClassSelector(ClassName), ClassName), Block)
+
+# Id selectors
+
+#some-id, a#another-id {}
+
+==>
+
+RuleSet(IdSelector(IdName), IdSelector(TagName, IdName), Block)
+
+# Attribute selectors
+
+[a] {}
+[b=c] {}
+[d~=e] {}
+a[b] {}
+
+==>
+
+RuleSet(AttributeSelector(AttributeName), Block),
+RuleSet(AttributeSelector(AttributeName, Operator, Value), Block),
+RuleSet(AttributeSelector(AttributeName, Operator, Value), Block),
+RuleSet(AttributeSelector(TagName, AttributeName), Block)
+
+# Pseudo-class selectors
+
+a:hover {}
+:nth-child(2) {}
+
+==>
+
+RuleSet(PseudoClassSelector(TagName, PseudoClassName), Block),
+RuleSet(PseudoClassSelector(TagName, PseudoClassName, ArgList(NumberLiteral)), Block)
+
+# Pseudo-element selectors
+
+a::first-line {}
+
+==>
+
+RuleSet(PseudoClassSelector(TagName, PseudoClassName), Block),
+
+# Child selectors
+
+a > b {}
+c > d > e {}
+
+==>
+
+RuleSet(ChildSelector(TagName, Operator, TagName), Block),
+RuleSet(ChildSelector(ChildSelector(TagName, Operator, TagName), Operator, TagName), Block)
+
+# Descendant selectors
+
+a b {}
+c d e {}
+
+==>
+
+RuleSet(DescendantSelector(TagName, TagName), Block),
+RuleSet(DescendantSelector(DescendantSelector(TagName, TagName), TagName), Block)
+
+# Nesting selectors
+
+a {
+  &.b {}
+  & c {}
+  & > d {}
+}
+
+==>
+
+RuleSet(TagName, Block(
+  RuleSet(ClassSelector(NestingSelector, ClassName), Block),
+  RuleSet(DescendantSelector(NestingSelector, TagName), Block),
+  RuleSet(ChildSelector(NestingSelector, Operator, TagName), Block)
+))
+
+# Sibling selectors
+
+a.b ~ c.d {}
+.e.f + .g.h {}
+
+==>
+
+RuleSet(SiblingSelector(ClassSelector(TagName, ClassName), Operator, ClassSelector(TagName, ClassName)), Block),
+RuleSet(SiblingSelector(ClassSelector(ClassSelector(ClassName), ClassName), Operator,
+  ClassSelector(ClassSelector(ClassName), ClassName)), Block)
+
+# The :not selector
+
+a:not(:hover) {}
+.b:not(c > .d) {}
+
+==>
+
+RuleSet(PseudoClassSelector(TagName, PseudoClassName, ArgList(PseudoClassSelector(PseudoClassName))), Block),
+RuleSet(PseudoClassSelector(ClassSelector(ClassName), PseudoClassName, ArgList(ChildSelector(TagName, Operator, ClassSelector(ClassName)))), Block)
