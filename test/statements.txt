@@ -1,0 +1,110 @@
+# Import statements
+
+@import url("fineprint.css") print;
+@import url("bluish.css") speech;
+@import 'custom.css';
+@import url("chrome://communicator/skin/");
+@import "common.css" screen;
+
+==>
+
+ImportStatement(AtKeyword, CallLiteral(Callee, StringLiteral), KeywordQuery),
+ImportStatement(AtKeyword, CallLiteral(Callee, StringLiteral), KeywordQuery),
+ImportStatement(AtKeyword, StringLiteral),
+ImportStatement(AtKeyword, CallLiteral(Callee, StringLiteral)),
+ImportStatement(AtKeyword, StringLiteral, KeywordQuery)
+
+# Namespace statements
+
+/* Default namespace */
+@namespace url(XML-namespace-URL);
+@namespace "XML-namespace-URL";
+@namespace url(http://www.w3.org/1999/xhtml);
+@namespace svg url(http://www.w3.org/2000/svg);
+
+/* Prefixed namespace */
+@namespace prefix url(XML-namespace-URL);
+@namespace prefix "XML-namespace-URL";
+
+==>
+
+Comment,
+NamespaceStatement(AtKeyword, CallLiteral(Callee, ParenthesizedContent)),
+NamespaceStatement(AtKeyword, StringLiteral),
+NamespaceStatement(AtKeyword, CallLiteral(Callee, ParenthesizedContent)),
+NamespaceStatement(AtKeyword, Def, CallLiteral(Callee, ParenthesizedContent)),
+Comment,
+NamespaceStatement(AtKeyword, Def, CallLiteral(Callee, ParenthesizedContent)),
+NamespaceStatement(AtKeyword, Def, StringLiteral)
+
+# Keyframes statements
+
+@keyframes important1 {
+  from { margin-top: 50px; }
+  50%  { margin-top: 150px !important; } /* ignored */
+  to   { margin-top: 100px; }
+}
+
+==>
+
+KeyframesStatement(AtKeyword, Def, KeyframeList(
+  Keyword, Block(Declaration(PropertyName, NumberLiteral(Unit))),
+  NumberLiteral(Unit), Block(Declaration(PropertyName, NumberLiteral(Unit), Important)),
+  Comment,
+  Keyword, Block(Declaration(PropertyName, NumberLiteral(Unit)))))
+
+# Media statements
+
+@media screen and (min-width: 30em) and (orientation: landscape) {}
+@media (min-height: 680px), screen and (orientation: portrait) {}
+@media not all and (monochrome) {}
+@media only screen {}
+
+==>
+
+MediaStatement(AtKeyword, BinaryQuery(BinaryQuery(KeywordQuery, Operator, FeatureQuery(FeatureName, NumberLiteral(Unit))), Operator,
+  FeatureQuery(FeatureName, Value)), Block),
+MediaStatement(AtKeyword, FeatureQuery(FeatureName, NumberLiteral(Unit)),
+  BinaryQuery(KeywordQuery, Operator, FeatureQuery(FeatureName, Value)), Block),
+MediaStatement(AtKeyword, UnaryQuery(Operator, BinaryQuery(KeywordQuery, Operator, ParenthesizedQuery(KeywordQuery))), Block),
+MediaStatement(AtKeyword, UnaryQuery(Operator, KeywordQuery), Block)
+
+# Supports statements
+
+@supports (animation-name: test) {
+  div { animation-name: test; }
+}
+@supports (transform-style: preserve) or (-moz-transform-style: preserve) {}
+@supports not ((text-align-last: justify) or (-moz-text-align-last: justify)) {}
+@supports not selector(:matches(a, b)) {}
+
+==>
+
+SupportsStatement(AtKeyword, FeatureQuery(FeatureName, Value), Block(
+  RuleSet(TagName, Block(Declaration(PropertyName, Value))))),
+SupportsStatement(AtKeyword, BinaryQuery(FeatureQuery(FeatureName, Value), Operator, FeatureQuery(FeatureName, Value)), Block),
+SupportsStatement(AtKeyword, UnaryQuery(Operator, ParenthesizedQuery(BinaryQuery(FeatureQuery(FeatureName, Value),
+  Operator, FeatureQuery(FeatureName, Value)))), Block),
+SupportsStatement(AtKeyword, UnaryQuery(Operator, SelectorQuery(Keyword, PseudoClassSelector(PseudoClassName, ArgList(Value, Value)))), Block)
+
+# Charset statements
+
+@charset "utf-8";
+
+==>
+
+CharsetStatement(AtKeyword, StringLiteral)
+
+# Other at-statements
+
+@font-face {
+  font-family: "Open Sans";
+  src: url("/a") format("woff2"), url("/b/c") format("woff");
+}
+
+==>
+
+AtRule(AtKeyword, Block(
+  Declaration(PropertyName, StringLiteral),
+  Declaration(PropertyName, CallLiteral(Callee, StringLiteral), CallExpression(Callee, ArgList(StringLiteral)),
+    CallLiteral(Callee, StringLiteral), CallExpression(Callee, ArgList(StringLiteral)))))

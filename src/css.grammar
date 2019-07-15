@@ -21,19 +21,19 @@ item {
 
 RuleSet { selector ("," selector)* Block }
 
-ImportStatement { specialize<AtKeyword, "@import"> value commaSep<query> ";" }
+ImportStatement { specialize<AtKeyword, "@import", AtKeyword> value commaSep<query> ";" }
 
-MediaStatement { specialize<AtKeyword, "@media"> commaSep<query> Block }
+MediaStatement { specialize<AtKeyword, "@media", AtKeyword> commaSep<query> Block }
 
-CharsetStatement { specialize<AtKeyword, "@charset"> value ";" }
+CharsetStatement { specialize<AtKeyword, "@charset", AtKeyword> value ";" }
 
-NamespaceStatement { specialize<AtKeyword, "@namespace"> tag.Def<identifier>? (StringLiteral | CallExpression) ";" }
+NamespaceStatement { specialize<AtKeyword, "@namespace", AtKeyword> tag.Def<identifier>? (StringLiteral | CallLiteral) ";" }
 
-KeyframesStatement { specialize<AtKeyword, "@keyframes"> tag.Def<identifier> KeyframeList }
+KeyframesStatement { specialize<AtKeyword, "@keyframes", AtKeyword> tag.Def<identifier> KeyframeList }
 
 KeyframeList { "{" ((kw<"from"> | kw<"to"> | NumberLiteral) Block)* "}" }
 
-SupportsStatement { specialize<AtKeyword, "@supports"> query Block }
+SupportsStatement { specialize<AtKeyword, "@supports", AtKeyword> query Block }
 
 AtRule { AtKeyword commaSep<query> (";" | Block) }
 
@@ -69,9 +69,9 @@ query {
   tag.KeywordQuery<identifier> |
   tag.FeatureQuery<"(" tag.FeatureName<identifier> ":" value+ ")"> |
   tag.BinaryQuery<query !valueOp logicOp query> |
-  // FIXME tag.UnaryQuery<("not" | "only") query> |
-  tag.ParenthesizedQuery<"(" query ")"> //|
-//  tag.SelectorQuery<kw<"selector"> "(" selector ")"> FIXME
+  tag.UnaryQuery<specialize<identifier, "not" | "only", Operator> query> |
+  tag.ParenthesizedQuery<"(" query ")"> |
+  tag.SelectorQuery<specialize<callee, "selector", Keyword> "(" selector ")">
 }
 
 value {
@@ -82,7 +82,11 @@ value {
   StringLiteral |
   tag.BinaryExpression<value !valueOp binOp value> |
   CallExpression |
-  tag.CallLiteral<specialize<callee, "url" | "url-prefix" | "domain" | "regexp"> "(" (ParenthesizedContent | StringLiteral) ")">
+  CallLiteral
+}
+
+CallLiteral {
+  specialize<callee, "url" | "url-prefix" | "domain" | "regexp", Callee> "(" (ParenthesizedContent | StringLiteral) ")"
 }
 
 CallExpression {

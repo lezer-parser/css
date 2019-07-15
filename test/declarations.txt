@@ -97,7 +97,7 @@ a {
 ==>
 
 RuleSet(TagName, Block(
-  Declaration(PropertyName, CallLiteral(ParenthesizedContent))))
+  Declaration(PropertyName, CallLiteral(Callee, ParenthesizedContent))))
 
 # Important declarations
 
