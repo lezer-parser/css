@@ -37,14 +37,17 @@ SupportsStatement { specialize<AtKeyword, "@supports"> query Block }
 
 AtRule { AtKeyword commaSep<query> (";" | Block) }
 
-Block { "{" item* (Declaration (";" item* Declaration?)*)? "}" }
+Block { "{"  ~item item* (Declaration (";" ~item item* Declaration?)*)? "}" }
 
 selector {
   UniversalSelector |
-  tag.TagName<identifier> |
+  tag.TagName<~item identifier> |
   NestingSelector |
   tag.ClassSelector<selector? !attribute "." tag.ClassName<identifier>> |
-  tag.PseudoClassSelector<selector? !attribute (":" | "::") tag.ClassName<identifier | Callee ArgList<selector>>> |
+  tag.PseudoClassSelector<selector? !attribute (":" | "::") (
+    tag.PseudoClassName<identifier> |
+    specialize<callee, "not", PseudoClassName> ArgList<selector> |
+    tag.PseudoClassName<callee> ArgList<value+>)> |
   tag.IdSelector<selector? !attribute "#" tag.IdName<identifier>> |
   tag.AttributeSelector<selector? !attribute "[" tag.AttributeName<identifier> (matchOp value)? "]"> |
   tag.ChildSelector<selector !structure childOp selector> |
@@ -59,7 +62,7 @@ NumberLiteral {
 ArgList<content> { "(" commaSep<content> ")" }
 
 Declaration {
-  PropertyName ":" value (","? value)* Important?
+  tag.PropertyName<identifier> ":" value (","? value)* Important?
 }
 
 query {
@@ -79,11 +82,11 @@ value {
   StringLiteral |
   tag.BinaryExpression<value !valueOp binOp value> |
   CallExpression |
-  tag.CallLiteral<specialize<Callee, "url" | "url-prefix" | "domain" | "regexp"> "(" (ParenthesizedContent | StringLiteral) ")">
+  tag.CallLiteral<specialize<callee, "url" | "url-prefix" | "domain" | "regexp"> "(" (ParenthesizedContent | StringLiteral) ")">
 }
 
 CallExpression {
-  Callee ArgList<value+>
+  tag.Callee<callee> ArgList<value+>
 }
 
 commaSep<value> { "" | value ("," value)* }
@@ -99,8 +102,7 @@ external tokens unit from "./tokens" {
 }
 
 external tokens identifiers from "./tokens" {
-  Callee,
-  PropertyName,
+  callee,
   identifier
 }
 

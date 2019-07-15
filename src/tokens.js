@@ -2,7 +2,7 @@
    expressed by Lezer's built-in tokenizer. */
 
 import {ExternalTokenizer} from "lezer"
-import {Callee, PropertyName, identifier, descendantSelector, Unit} from "./parser.terms.js"
+import {callee, identifier, descendantSelector, Unit} from "./parser.terms.js"
 
 const space = [9, 10, 11, 12, 13, 32, 133, 160, 5760, 8192, 8193, 8194, 8195, 8196, 8197,
                8198, 8199, 8200, 8201, 8202, 8232, 8233, 8239, 8287, 12288]
@@ -22,15 +22,8 @@ export const identifiers = new ExternalTokenizer((input, token) => {
       pos++
       continue
     }
-    if (inside) {
-      if (next == parenL) {
-        token.accept(Callee, pos)
-      } else {
-        let end = pos
-        while (space.includes(next)) next = input.get(++pos)
-        token.accept(next == colon ? PropertyName : identifier, end)
-      }
-    }
+    if (inside)
+      token.accept(next == parenL ? callee : identifier, pos)
     break
   }
 })
