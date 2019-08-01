@@ -8,11 +8,11 @@
 
 ==>
 
-ImportStatement(AtKeyword, CallLiteral(Callee, StringLiteral), KeywordQuery),
-ImportStatement(AtKeyword, CallLiteral(Callee, StringLiteral), KeywordQuery),
-ImportStatement(AtKeyword, StringLiteral),
-ImportStatement(AtKeyword, CallLiteral(Callee, StringLiteral)),
-ImportStatement(AtKeyword, StringLiteral, KeywordQuery)
+import.d(import.at.k, call.l(callee.name, string.l), keyword.q),
+import.d(import.at.k, call.l(callee.name, string.l), keyword.q),
+import.d(import.at.k, string.l),
+import.d(import.at.k, call.l(callee.name, string.l)),
+import.d(import.at.k, string.l, keyword.q)
 
 # Namespace statements
 
@@ -28,14 +28,14 @@ ImportStatement(AtKeyword, StringLiteral, KeywordQuery)
 
 ==>
 
-Comment,
-NamespaceStatement(AtKeyword, CallLiteral(Callee, ParenthesizedContent)),
-NamespaceStatement(AtKeyword, StringLiteral),
-NamespaceStatement(AtKeyword, CallLiteral(Callee, ParenthesizedContent)),
-NamespaceStatement(AtKeyword, Def, CallLiteral(Callee, ParenthesizedContent)),
-Comment,
-NamespaceStatement(AtKeyword, Def, CallLiteral(Callee, ParenthesizedContent)),
-NamespaceStatement(AtKeyword, Def, StringLiteral)
+block.c,
+namespace.d(namespace.at.k, call.l(callee.name, parenthesized.c)),
+namespace.d(namespace.at.k, string.l),
+namespace.d(namespace.at.k, call.l(callee.name, parenthesized.c)),
+namespace.d(namespace.at.k, namespace.definition.name, call.l(callee.name, parenthesized.c)),
+block.c,
+namespace.d(namespace.at.k, namespace.d, call.l(callee.name, parenthesized.c)),
+namespace.d(namespace.at.k, namespace.d, string.l)
 
 # Keyframes statements
 
@@ -47,11 +47,11 @@ NamespaceStatement(AtKeyword, Def, StringLiteral)
 
 ==>
 
-KeyframesStatement(AtKeyword, Def, KeyframeList(
-  Keyword, Block(Declaration(PropertyName, NumberLiteral(Unit))),
-  NumberLiteral(Unit), Block(Declaration(PropertyName, NumberLiteral(Unit), Important)),
-  Comment,
-  Keyword, Block(Declaration(PropertyName, NumberLiteral(Unit)))))
+keyframes.s(keyframes.at.k, keyframes.definition.name, keyframe.l(
+  from.k, block(property.d(property.n, number.l(unit.n))),
+  number.l(unit.n), block(property.d(property.n, number.l(unit.n), important.k)),
+  block.c,
+  to.k, block(property.d(property.n, number.l(unit.n)))))
 
 # Media statements
 
@@ -62,12 +62,12 @@ KeyframesStatement(AtKeyword, Def, KeyframeList(
 
 ==>
 
-MediaStatement(AtKeyword, BinaryQuery(BinaryQuery(KeywordQuery, Operator, FeatureQuery(FeatureName, NumberLiteral(Unit))), Operator,
-  FeatureQuery(FeatureName, Value)), Block),
-MediaStatement(AtKeyword, FeatureQuery(FeatureName, NumberLiteral(Unit)),
-  BinaryQuery(KeywordQuery, Operator, FeatureQuery(FeatureName, Value)), Block),
-MediaStatement(AtKeyword, UnaryQuery(Operator, BinaryQuery(KeywordQuery, Operator, ParenthesizedQuery(KeywordQuery))), Block),
-MediaStatement(AtKeyword, UnaryQuery(Operator, KeywordQuery), Block)
+media.s(media.at.k, binary.operator.q(binary.operator.q(keyword.q, operator.n, feature.q(feature.n, number.l(unit.n))), operator.n,
+  feature.q(feature.n, value.n)), block),
+media.s(media.at.k, feature.q(feature.n, number.l(unit.n)),
+  binary.operator.q(keyword.q, operator.n, feature.q(feature.n, value.n)), block),
+media.s(media.at.k, unary.operator.q(operator.k, binary.operator.q(keyword.q, operator.n, parenthesized.q(keyword.q))), block),
+media.s(media.at.k, unary.operator.q(operator.k, keyword.q), block)
 
 # Supports statements
 
@@ -80,12 +80,12 @@ MediaStatement(AtKeyword, UnaryQuery(Operator, KeywordQuery), Block)
 
 ==>
 
-SupportsStatement(AtKeyword, FeatureQuery(FeatureName, Value), Block(
-  RuleSet(TagName, Block(Declaration(PropertyName, Value))))),
-SupportsStatement(AtKeyword, BinaryQuery(FeatureQuery(FeatureName, Value), Operator, FeatureQuery(FeatureName, Value)), Block),
-SupportsStatement(AtKeyword, UnaryQuery(Operator, ParenthesizedQuery(BinaryQuery(FeatureQuery(FeatureName, Value),
-  Operator, FeatureQuery(FeatureName, Value)))), Block),
-SupportsStatement(AtKeyword, UnaryQuery(Operator, SelectorQuery(Keyword, PseudoClassSelector(PseudoClassName, ArgList(Value, Value)))), Block)
+supports.d(supports.at.k, feature.q(feature.n, value.n), block(
+  ruleSet.d(tag.name.selector, block(property.d(property.n, value.n))))),
+supports.d(supports.at.k, binary.operator.q(feature.q(feature.n, value.n), operator.n, feature.q(feature.n, value.n)), block),
+supports.d(supports.at.k, unary.operator.q(operator.k, parenthesized.q(binary.operator.q(feature.q(feature.n, value.n),
+  operator.n, feature.q(feature.n, value.n)))), block),
+supports.d(supports.at.k, unary.operator.q(operator.k, selector.q(selector.k, pseudoClass.s(pseudoClass.n, argument.list(value.n, value.n)))), block)
 
 # Charset statements
 
@@ -93,7 +93,7 @@ SupportsStatement(AtKeyword, UnaryQuery(Operator, SelectorQuery(Keyword, PseudoC
 
 ==>
 
-CharsetStatement(AtKeyword, StringLiteral)
+charset.d(charset.at.k, string.l)
 
 # Other at-statements
 
@@ -104,7 +104,7 @@ CharsetStatement(AtKeyword, StringLiteral)
 
 ==>
 
-AtRule(AtKeyword, Block(
-  Declaration(PropertyName, StringLiteral),
-  Declaration(PropertyName, CallLiteral(Callee, StringLiteral), CallExpression(Callee, ArgList(StringLiteral)),
-    CallLiteral(Callee, StringLiteral), CallExpression(Callee, ArgList(StringLiteral)))))
+atRule.s(at.k, block(
+  property.d(property.n, string.l),
+  property.d(property.n, call.l(callee.name, string.l), call.e(callee.name, argument.list(string.l)),
+    call.l(callee.name, string.l), call.e(callee.name, argument.list(string.l)))))

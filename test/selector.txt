@@ -4,7 +4,7 @@
 
 ==>
 
-RuleSet(UniversalSelector, Block)
+ruleSet.d(universal.o, block)
 
 # Type selectors
 
@@ -13,8 +13,8 @@ h1, h2, h3, h4 {}
 
 ==>
 
-RuleSet(TagName, TagName, Block),
-RuleSet(TagName, TagName, TagName, TagName, Block)
+ruleSet.d(tag.name.selector, tag.name.selector, block),
+ruleSet.d(tag.name.selector, tag.name.selector, tag.name.selector, tag.name.selector, block)
 
 # Class selectors
 
@@ -23,8 +23,8 @@ div.class-b, .class-c.class-d {}
 
 ==>
 
-RuleSet(ClassSelector(ClassName), Block),
-RuleSet(ClassSelector(TagName, ClassName), ClassSelector(ClassSelector(ClassName), ClassName), Block)
+ruleSet.d(class.s(class.n), block),
+ruleSet.d(class.s(tag.name.selector, class.n), class.s(class.s(class.n), class.n), block)
 
 # Id selectors
 
@@ -32,7 +32,7 @@ RuleSet(ClassSelector(TagName, ClassName), ClassSelector(ClassSelector(ClassName
 
 ==>
 
-RuleSet(IdSelector(IdName), IdSelector(TagName, IdName), Block)
+ruleSet.d(id.s(id.n), id.s(tag.name.selector, id.n), block)
 
 # Attribute selectors
 
@@ -43,10 +43,10 @@ a[b] {}
 
 ==>
 
-RuleSet(AttributeSelector(AttributeName), Block),
-RuleSet(AttributeSelector(AttributeName, Operator, Value), Block),
-RuleSet(AttributeSelector(AttributeName, Operator, Value), Block),
-RuleSet(AttributeSelector(TagName, AttributeName), Block)
+ruleSet.d(attribute.s(attribute.n), block),
+ruleSet.d(attribute.s(attribute.n, operator.n, value.n), block),
+ruleSet.d(attribute.s(attribute.n, operator.n, value.n), block),
+ruleSet.d(attribute.s(tag.name.selector, attribute.n), block)
 
 # Pseudo-class selectors
 
@@ -55,8 +55,8 @@ a:hover {}
 
 ==>
 
-RuleSet(PseudoClassSelector(TagName, PseudoClassName), Block),
-RuleSet(PseudoClassSelector(PseudoClassName, ArgList(NumberLiteral)), Block)
+ruleSet.d(pseudoClass.s(tag.name.selector, pseudoClass.n), block),
+ruleSet.d(pseudoClass.s(pseudoClass.n, argument.list(number.l)), block)
 
 # Pseudo-element selectors
 
@@ -64,7 +64,7 @@ a::first-line {}
 
 ==>
 
-RuleSet(PseudoClassSelector(TagName, PseudoClassName), Block)
+ruleSet.d(pseudoClass.s(tag.name.selector, pseudoClass.n), block)
 
 # Child selectors
 
@@ -73,8 +73,8 @@ c > d > e {}
 
 ==>
 
-RuleSet(ChildSelector(TagName, Operator, TagName), Block),
-RuleSet(ChildSelector(ChildSelector(TagName, Operator, TagName), Operator, TagName), Block)
+ruleSet.d(child.s(tag.name.selector, operator.n, tag.name.selector), block),
+ruleSet.d(child.s(child.s(tag.name.selector, operator.n, tag.name.selector), operator.n, tag.name.selector), block)
 
 # Descendant selectors
 
@@ -83,8 +83,8 @@ c d e {}
 
 ==>
 
-RuleSet(DescendantSelector(TagName, TagName), Block),
-RuleSet(DescendantSelector(DescendantSelector(TagName, TagName), TagName), Block)
+ruleSet.d(descendant.s(tag.name.selector, tag.name.selector), block),
+ruleSet.d(descendant.s(descendant.s(tag.name.selector, tag.name.selector), tag.name.selector), block)
 
 # Nesting selectors
 
@@ -96,10 +96,10 @@ a {
 
 ==>
 
-RuleSet(TagName, Block(
-  RuleSet(ClassSelector(NestingSelector, ClassName), Block),
-  RuleSet(DescendantSelector(NestingSelector, TagName), Block),
-  RuleSet(ChildSelector(NestingSelector, Operator, TagName), Block)
+ruleSet.d(tag.name.selector, block(
+  ruleSet.d(class.s(nesting.o, class.n), block),
+  ruleSet.d(descendant.s(nesting.o, tag.name.selector), block),
+  ruleSet.d(child.s(nesting.o, operator.n, tag.name.selector), block)
 ))
 
 # Sibling selectors
@@ -109,9 +109,9 @@ a.b ~ c.d {}
 
 ==>
 
-RuleSet(SiblingSelector(ClassSelector(TagName, ClassName), Operator, ClassSelector(TagName, ClassName)), Block),
-RuleSet(SiblingSelector(ClassSelector(ClassSelector(ClassName), ClassName), Operator,
-  ClassSelector(ClassSelector(ClassName), ClassName)), Block)
+ruleSet.d(sibling.s(class.s(tag.name.selector, class.n), operator.n, class.s(tag.name.selector, class.n)), block),
+ruleSet.d(sibling.s(class.s(class.s(class.n), class.n), operator.n,
+  class.s(class.s(class.n), class.n)), block)
 
 # The :not selector
 
@@ -120,5 +120,5 @@ a:not(:hover) {}
 
 ==>
 
-RuleSet(PseudoClassSelector(TagName, PseudoClassName, ArgList(PseudoClassSelector(PseudoClassName))), Block),
-RuleSet(PseudoClassSelector(ClassSelector(ClassName), PseudoClassName, ArgList(ChildSelector(TagName, Operator, ClassSelector(ClassName)))), Block)
+ruleSet.d(pseudoClass.s(tag.name.selector, pseudoClass.n, argument.list(pseudoClass.s(pseudoClass.n))), block),
+ruleSet.d(pseudoClass.s(class.s(class.n), pseudoClass.n, argument.list(child.s(tag.name.selector, operator.n, class.s(class.n)))), block)

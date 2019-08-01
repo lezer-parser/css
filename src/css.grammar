@@ -50,7 +50,7 @@ keyframeList:keyframe.list.block {
 }
 
 supportsStatement:supports.declaration.statement {
-  specialize<atKeyword, "@supports", :support.at.keyword> query block
+  specialize<atKeyword, "@supports", :supports.at.keyword> query block
 }
 
 atRule:atRule.statement { atKeyword commaSep<query> (";" | block) }
@@ -93,7 +93,7 @@ query {
 }
 
 value {
-  identifier:name.expression |
+  identifier:value.name.expression |
   ("(" value ")"):parenthesized.expression |
   colorLiteral |
   numberLiteral |
@@ -107,7 +107,7 @@ callLiteral:call.literal.expression {
   specialize<callee, "url" | "url-prefix" | "domain" | "regexp", :callee.name> "(" (parenthesizedContent | stringLiteral) ")"
 }
 
-callExpression {
+callExpression:call.expression {
   callee:callee.name argList<value+>
 }
 
