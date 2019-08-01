@@ -2,7 +2,7 @@
    expressed by Lezer's built-in tokenizer. */
 
 import {ExternalTokenizer} from "lezer"
-import {callee, identifier, descendantSelector, Unit} from "./parser.terms.js"
+import {callee, identifier, descendantSelector, unit} from "./parser.terms.js"
 
 const space = [9, 10, 11, 12, 13, 32, 133, 160, 5760, 8192, 8193, 8194, 8195, 8196, 8197,
                8198, 8199, 8200, 8201, 8202, 8232, 8233, 8239, 8287, 12288]
@@ -37,15 +37,15 @@ export const descendant = new ExternalTokenizer((input, token) => {
   }
 })
 
-export const unit = new ExternalTokenizer((input, token) => {
+export const unitToken = new ExternalTokenizer((input, token) => {
   let {start} = token
   if (!space.includes(input.get(start - 1))) {
     let next = input.get(start)
-    if (next == percent) token.accept(Unit, start + 1)
+    if (next == percent) token.accept(unit, start + 1)
     if (isAlpha(next)) {
       let pos = start + 1
       while (isAlpha(input.get(pos))) pos++
-      token.accept(Unit, pos)
+      token.accept(unit, pos)
     }
   }
 })

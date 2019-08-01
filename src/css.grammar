@@ -4,105 +4,123 @@ precedence {
   valueOp left
 }
 
-skip { whitespace | Comment }
+skip { whitespace | comment }
 
 top { item+ }
 
 item {
-  RuleSet |
-  ImportStatement |
-  MediaStatement |
-  CharsetStatement |
-  NamespaceStatement |
-  KeyframesStatement |
-  SupportsStatement |
-  AtRule
+  ruleSet |
+  importStatement |
+  mediaStatement |
+  charsetStatement |
+  namespaceStatement |
+  keyframesStatement |
+  supportsStatement |
+  atRule
 }
 
-RuleSet { selector ("," selector)* Block }
+ruleSet:ruleSet.declaration.statement {
+  selector ("," selector)* block
+}
 
-ImportStatement { specialize<AtKeyword, "@import", AtKeyword> value commaSep<query> ";" }
+importStatement:import.declaration.statement {
+  specialize<atKeyword, "@import", :import.at.keyword> value commaSep<query> ";"
+}
 
-MediaStatement { specialize<AtKeyword, "@media", AtKeyword> commaSep<query> Block }
+mediaStatement:media.statement {
+  specialize<atKeyword, "@media", :media.at.keyword> commaSep<query> block
+}
 
-CharsetStatement { specialize<AtKeyword, "@charset", AtKeyword> value ";" }
+charsetStatement:charset.declaration.statement {
+  specialize<atKeyword, "@charset", :charset.at.keyword> value ";"
+}
 
-NamespaceStatement { specialize<AtKeyword, "@namespace", AtKeyword> tag.Def<identifier>? (StringLiteral | CallLiteral) ";" }
+namespaceStatement:namespace.declaration.statement {
+  specialize<atKeyword, "@namespace", :namespace.at.keyword>
+  identifier:namespace.definition.name?
+  (stringLiteral | callLiteral) ";"
+}
 
-KeyframesStatement { specialize<AtKeyword, "@keyframes", AtKeyword> tag.Def<identifier> KeyframeList }
+keyframesStatement:keyframes.statement {
+  specialize<atKeyword, "@keyframes", :keyframes.at.keyword> identifier:keyframes.definition.name keyframeList
+}
 
-KeyframeList { "{" ((kw<"from"> | kw<"to"> | NumberLiteral) Block)* "}" }
+keyframeList:keyframe.list.block {
+  "{" ((kw<"from"> | kw<"to"> | numberLiteral) block)* "}"
+}
 
-SupportsStatement { specialize<AtKeyword, "@supports", AtKeyword> query Block }
+supportsStatement:supports.declaration.statement {
+  specialize<atKeyword, "@supports", :support.at.keyword> query block
+}
 
-AtRule { AtKeyword commaSep<query> (";" | Block) }
+atRule:atRule.statement { atKeyword commaSep<query> (";" | block) }
 
-Block { "{"  ~item item* (Declaration (";" ~item item* Declaration?)*)? "}" }
+block:block { "{"  ~item item* (declaration (";" ~item item* declaration?)*)? "}" }
 
 selector {
-  UniversalSelector |
-  tag.TagName<~item identifier> |
-  NestingSelector |
-  tag.ClassSelector<selector? !attribute "." tag.ClassName<identifier>> |
-  tag.PseudoClassSelector<selector? !attribute (":" | "::") (
-    tag.PseudoClassName<identifier> |
-    specialize<callee, "not", PseudoClassName> ArgList<selector> |
-    tag.PseudoClassName<callee> ArgList<value+>)> |
-  tag.IdSelector<selector? !attribute "#" tag.IdName<identifier>> |
-  tag.AttributeSelector<selector? !attribute "[" tag.AttributeName<identifier> (matchOp value)? "]"> |
-  tag.ChildSelector<selector !structure childOp selector> |
-  tag.DescendantSelector<selector !structure descendantSelector selector> |
-  tag.SiblingSelector<selector !structure siblingOp selector>
+  universalSelector |
+  (~item identifier):tag.name.selector |
+  nestingSelector |
+  (selector? !attribute "." identifier:class.name):class.selector |
+  (selector? !attribute (":" | "::") (
+    identifier:pseudoClass.name |
+    specialize<callee, "not", :pseudoClass.name> argList<selector> |
+    callee:pseudoClass.name argList<value+>)):pseudoClass.selector |
+  (selector? !attribute "#" identifier:id.name):id.selector |
+  (selector? !attribute "[" identifier:attribute.name (matchOp value)? "]"):attribute.selector |
+  (selector !structure childOp selector):child.selector |
+  (selector !structure descendantSelector selector):descendant.selector |
+  (selector !structure siblingOp selector):sibling.selector
 }
 
-NumberLiteral {
-  numberLiteral Unit?
+numberLiteral:number.literal.expression {
+  numberLiteralInner unit?
 }
 
-ArgList<content> { "(" commaSep<content> ")" }
+argList<content>:argument.list { "(" commaSep<content> ")" }
 
-Declaration {
-  tag.PropertyName<identifier> ":" value (","? value)* Important?
+declaration:property.declaration.statement {
+  identifier:property.name ":" value (","? value)* important?
 }
 
 query {
-  tag.KeywordQuery<identifier> |
-  tag.FeatureQuery<"(" tag.FeatureName<identifier> ":" value+ ")"> |
-  tag.BinaryQuery<query !valueOp logicOp query> |
-  tag.UnaryQuery<specialize<identifier, "not" | "only", Operator> query> |
-  tag.ParenthesizedQuery<"(" query ")"> |
-  tag.SelectorQuery<specialize<callee, "selector", Keyword> "(" selector ")">
+  identifier:keyword.query |
+  ("(" identifier:feature.name ":" value+ ")"):feature.query |
+  (query !valueOp logicOp query):binary.operator.query |
+  (specialize<identifier, "not" | "only", :operator.keyword> query):unary.operator.query |
+  ("(" query ")"):parenthesized.query |
+  (specialize<callee, "selector", :selector.keyword> "(" selector ")"):selector.query
 }
 
 value {
-  tag.Value<identifier> |
-  tag.ParenthesizedValue<"(" value ")"> |
-  ColorLiteral |
-  NumberLiteral |
-  StringLiteral |
-  tag.BinaryExpression<value !valueOp binOp value> |
-  CallExpression |
-  CallLiteral
+  identifier:name.expression |
+  ("(" value ")"):parenthesized.expression |
+  colorLiteral |
+  numberLiteral |
+  stringLiteral |
+  (value !valueOp binOp value):binary.operator.expression |
+  callExpression |
+  callLiteral
 }
 
-CallLiteral {
-  specialize<callee, "url" | "url-prefix" | "domain" | "regexp", Callee> "(" (ParenthesizedContent | StringLiteral) ")"
+callLiteral:call.literal.expression {
+  specialize<callee, "url" | "url-prefix" | "domain" | "regexp", :callee.name> "(" (parenthesizedContent | stringLiteral) ")"
 }
 
-CallExpression {
-  tag.Callee<callee> ArgList<value+>
+callExpression {
+  callee:callee.name argList<value+>
 }
 
 commaSep<value> { "" | value ("," value)* }
 
-kw<term> { specialize<identifier, term, Keyword> }
+kw<term> { specialize<identifier, term, :$term.keyword> }
 
 external tokens descendant from "./tokens" {
   descendantSelector
 }
 
-external tokens unit from "./tokens" {
-  Unit
+external tokens unitToken from "./tokens" {
+  unit:unit.name
 }
 
 external tokens identifiers from "./tokens" {
@@ -111,46 +129,60 @@ external tokens identifiers from "./tokens" {
 }
 
 tokens {
-  UniversalSelector { "*" }
+  universalSelector:universal.operator.name { "*" }
 
-  NestingSelector { "&" }
+  nestingSelector:nesting.operator.name { "&" }
 
-  AtKeyword { "@" std.asciiLetter (std.asciiLetter | std.digit | "-")* }
+  atKeyword:at.keyword { "@" std.asciiLetter (std.asciiLetter | std.digit | "-")* }
 
-  matchOp=Operator { [~^|*$]? "=" }
+  matchOp:operator.name { [~^|*$]? "=" }
 
-  childOp=Operator { ">" ">"? }
+  childOp:operator.name { ">" ">"? }
 
-  siblingOp=Operator { "~" | "+" }
+  siblingOp:operator.name { "~" | "+" }
 
-  logicOp=Operator { "and" | "or" }
+  logicOp:operator.name { "and" | "or" }
 
-  binOp=Operator { [+\-*/] }
+  binOp:operator.name { [+\-*/] }
 
-  Important { "!important" }
+  important:important.keyword { "!important" }
 
   whitespace { std.whitespace+ }
 
-  Comment { "/*" commentRest }
+  comment:block.comment { "/*" commentRest }
 
   commentRest { [^*] commentRest | "*" commentAfterStar }
 
   commentAfterStar { "/" | "*" commentAfterStar | [^/*] commentRest }
 
-  precedence { Comment, binOp }
+  precedence { comment, binOp }
 
   hexDigit { std.digit | [a-fA-F] }
 
-  ParenthesizedContent { [^'")] [^)]+ }
+  parenthesizedContent:parenthesized.content { [^'")] [^)]+ }
 
-  precedence { whitespace, ParenthesizedContent, Comment }
+  precedence { whitespace, parenthesizedContent, comment }
 
-  ColorLiteral { "#" hexDigit hexDigit hexDigit (hexDigit (hexDigit hexDigit (hexDigit hexDigit)?)?)? }
+  colorLiteral:color.literal.expression {
+    "#" hexDigit hexDigit hexDigit (hexDigit (hexDigit hexDigit (hexDigit hexDigit)?)?)?
+  }
 
-  numberLiteral { ("+" | "-")? (std.digit+ ("." std.digit*)? | "." std.digit+) (("e" | "E") ("+" | "-")? std.digit+)? }
+  numberLiteralInner { ("+" | "-")? (std.digit+ ("." std.digit*)? | "." std.digit+) (("e" | "E") ("+" | "-")? std.digit+)? }
 
-  precedence { numberLiteral, binOp, siblingOp }
+  precedence { numberLiteralInner, binOp, siblingOp }
 
-  StringLiteral { "\"" ([^"\n\\] | "\\" _)* "\"" | "'" ([^'\n\\] | "\\" _)* "'" }
+  stringLiteral:string.literal.expression { "\"" ([^"\n\\] | "\\" _)* "\"" | "'" ([^'\n\\] | "\\" _)* "'" }
+
+  "(":open.paren.punctuation
+  ")":close.paren.punctuation
+  "[":open.bracket.punctuation
+  "]":close.bracket.punctuation
+  "{":open.brace.punctuation
+  "}":close.brace.punctuation
+  ",":comma.punctuation
+  ":":colon.punctuation
+  "::":doubleColon.punctuation
+  ".":dot.punctuation
+  ";":semicolon.punctuation
+  "#":hash.punctuation
 }
-
