@@ -1,12 +1,12 @@
-precedence {
-  attribute left,
-  structure left,
-  valueOp left
+@precedence {
+  attribute @left,
+  structure @left,
+  valueOp @left
 }
 
-skip { whitespace | comment }
+@skip { whitespace | comment }
 
-top { item+ }
+@top { item+ }
 
 item {
   ruleSet |
@@ -24,25 +24,25 @@ ruleSet:ruleSet.declaration.statement {
 }
 
 importStatement:import.declaration.statement {
-  specialize<atKeyword, "@import", :import.at.keyword> value commaSep<query> ";"
+  @specialize<atKeyword, "@import", :import.at.keyword> value commaSep<query> ";"
 }
 
 mediaStatement:media.statement {
-  specialize<atKeyword, "@media", :media.at.keyword> commaSep<query> block
+  @specialize<atKeyword, "@media", :media.at.keyword> commaSep<query> block
 }
 
 charsetStatement:charset.declaration.statement {
-  specialize<atKeyword, "@charset", :charset.at.keyword> value ";"
+  @specialize<atKeyword, "@charset", :charset.at.keyword> value ";"
 }
 
 namespaceStatement:namespace.declaration.statement {
-  specialize<atKeyword, "@namespace", :namespace.at.keyword>
+  @specialize<atKeyword, "@namespace", :namespace.at.keyword>
   identifier:namespace.definition.name?
   (stringLiteral | callLiteral) ";"
 }
 
 keyframesStatement:keyframes.statement {
-  specialize<atKeyword, "@keyframes", :keyframes.at.keyword> identifier:keyframes.definition.name keyframeList
+  @specialize<atKeyword, "@keyframes", :keyframes.at.keyword> identifier:keyframes.definition.name keyframeList
 }
 
 keyframeList:keyframe.list.block {
@@ -50,7 +50,7 @@ keyframeList:keyframe.list.block {
 }
 
 supportsStatement:supports.declaration.statement {
-  specialize<atKeyword, "@supports", :supports.at.keyword> query block
+  @specialize<atKeyword, "@supports", :supports.at.keyword> query block
 }
 
 atRule:atRule.statement { atKeyword commaSep<query> (";" | block) }
@@ -64,7 +64,7 @@ selector {
   (selector? !attribute "." identifier:class.name):class.selector |
   (selector? !attribute (":" | "::") (
     identifier:pseudoClass.name |
-    specialize<callee, "not", :pseudoClass.name> argList<selector> |
+    @specialize<callee, "not", :pseudoClass.name> argList<selector> |
     callee:pseudoClass.name argList<value+>)):pseudoClass.selector |
   (selector? !attribute "#" identifier:id.name):id.selector |
   (selector? !attribute "[" identifier:attribute.name (matchOp value)? "]"):attribute.selector |
@@ -87,9 +87,9 @@ query {
   identifier:keyword.query |
   ("(" identifier:feature.name ":" value+ ")"):feature.query |
   (query !valueOp logicOp query):binary.operator.query |
-  (specialize<identifier, "not" | "only", :operator.keyword> query):unary.operator.query |
+  (@specialize<identifier, "not" | "only", :operator.keyword> query):unary.operator.query |
   ("(" query ")"):parenthesized.query |
-  (specialize<callee, "selector", :selector.keyword> "(" selector ")"):selector.query
+  (@specialize<callee, "selector", :selector.keyword> "(" selector ")"):selector.query
 }
 
 value {
@@ -104,7 +104,7 @@ value {
 }
 
 callLiteral:call.literal.expression {
-  specialize<callee, "url" | "url-prefix" | "domain" | "regexp", :callee.name> "(" (parenthesizedContent | stringLiteral) ")"
+  @specialize<callee, "url" | "url-prefix" | "domain" | "regexp", :callee.name> "(" (parenthesizedContent | stringLiteral) ")"
 }
 
 callExpression:call.expression {
@@ -113,22 +113,22 @@ callExpression:call.expression {
 
 commaSep<value> { "" | value ("," value)* }
 
-kw<term> { specialize<identifier, term, :$term.keyword> }
+kw<term> { @specialize<identifier, term, :$term.keyword> }
 
-external tokens descendant from "./tokens" {
+@external-tokens descendant from "./tokens" {
   descendantSelector
 }
 
-external tokens unitToken from "./tokens" {
+@external-tokens unitToken from "./tokens" {
   unit:unit.name
 }
 
-external tokens identifiers from "./tokens" {
+@external-tokens identifiers from "./tokens" {
   callee,
   identifier
 }
 
-tokens {
+@tokens {
   universalSelector:universal.operator.name { "*" }
 
   nestingSelector:nesting.operator.name { "&" }
@@ -155,13 +155,13 @@ tokens {
 
   commentAfterStar { "/" | "*" commentAfterStar | [^/*] commentRest }
 
-  precedence { comment, binOp }
+  @precedence { comment, binOp }
 
   hexDigit { std.digit | [a-fA-F] }
 
   parenthesizedContent:parenthesized.content { [^'")] [^)]+ }
 
-  precedence { whitespace, parenthesizedContent, comment }
+  @precedence { whitespace, parenthesizedContent, comment }
 
   colorLiteral:color.literal.expression {
     "#" hexDigit hexDigit hexDigit (hexDigit (hexDigit hexDigit (hexDigit hexDigit)?)?)?
@@ -169,7 +169,7 @@ tokens {
 
   numberLiteralInner { ("+" | "-")? (std.digit+ ("." std.digit*)? | "." std.digit+) (("e" | "E") ("+" | "-")? std.digit+)? }
 
-  precedence { numberLiteralInner, binOp, siblingOp }
+  @precedence { numberLiteralInner, binOp, siblingOp }
 
   stringLiteral:string.literal.expression { "\"" ([^"\n\\] | "\\" _)* "\"" | "'" ([^'\n\\] | "\\" _)* "'" }
 
