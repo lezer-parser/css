@@ -172,17 +172,11 @@ kw<term> { @specialize<identifier, term, :$term.keyword> }
   @precedence { numberLiteralInner, binOp, siblingOp }
 
   stringLiteral:string.literal.expression { "\"" ([^"\n\\] | "\\" _)* "\"" | "'" ([^'\n\\] | "\\" _)* "'" }
+}
 
-  "(":open.paren.punctuation
-  ")":close.paren.punctuation
-  "[":open.bracket.punctuation
-  "]":close.bracket.punctuation
-  "{":open.brace.punctuation
-  "}":close.brace.punctuation
-  ",":comma.punctuation
-  ":":colon.punctuation
+@tags {
+  @all<:lang=css>
+  @detect-delim
+  @punctuation<"()[]{},:.;#">
   "::":doubleColon.punctuation
-  ".":dot.punctuation
-  ";":semicolon.punctuation
-  "#":hash.punctuation
 }
