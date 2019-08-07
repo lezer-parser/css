@@ -6,7 +6,7 @@
 
 @skip { whitespace | comment }
 
-@top { item+ }
+@top:stylesheet.document.lang=css { item+ }
 
 item {
   ruleSet |
@@ -175,7 +175,6 @@ kw<term> { @specialize<identifier, term, :$term.keyword> }
 }
 
 @tags {
-  @all<:lang=css>
   @detect-delim
   @punctuation<"()[]{},:.;#">
   "::":doubleColon.punctuation
