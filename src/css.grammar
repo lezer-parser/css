@@ -55,7 +55,7 @@ supportsStatement:supports.declaration.statement {
 
 atRule:atRule.statement { atKeyword commaSep<query> (";" | block) }
 
-block:block { "{"  ~item item* (declaration (";" ~item item* declaration?)*)? "}" }
+block:block { "{" ~item item* (declaration (";" ~item item* declaration?)*)? "}" }
 
 selector {
   universalSelector |

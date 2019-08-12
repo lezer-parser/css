@@ -123,3 +123,10 @@ ruleSet.d(tag.name.selector, block(
   property.d(property.n, call.expression(callee.name, argument.list(number.l(unit.n), block.c, value.n, number.l(unit.n), number.l(unit.n)))),
   property.d(property.n, call.expression(callee.name, argument.list(number.l(unit.n), number.l(unit.n), number.l(unit.n), number.l(unit.n))))))
 
+# Unfinished rule
+
+a { foo: 2
+
+==>
+
+ruleSet.d(tag.name.selector, block(property.d(property.n, number.l), error))
