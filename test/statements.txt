@@ -8,11 +8,12 @@
 
 ==>
 
-import.d(import.at.k, call.l(callee.name, string.l), keyword.q),
-import.d(import.at.k, call.l(callee.name, string.l), keyword.q),
-import.d(import.at.k, string.l),
-import.d(import.at.k, call.l(callee.name, string.l)),
-import.d(import.at.k, string.l, keyword.q)
+StyleSheet(
+  ImportStatement(import,CallLiteral(CallTag,StringLiteral),KeywordQuery),
+  ImportStatement(import,CallLiteral(CallTag,StringLiteral),KeywordQuery),
+  ImportStatement(import,StringLiteral),
+  ImportStatement(import,CallLiteral(CallTag,StringLiteral)),
+  ImportStatement(import,StringLiteral,KeywordQuery))
 
 # Namespace statements
 
@@ -28,14 +29,15 @@ import.d(import.at.k, string.l, keyword.q)
 
 ==>
 
-block.c,
-namespace.d(namespace.at.k, call.l(callee.name, parenthesized.c)),
-namespace.d(namespace.at.k, string.l),
-namespace.d(namespace.at.k, call.l(callee.name, parenthesized.c)),
-namespace.d(namespace.at.k, namespace.definition.name, call.l(callee.name, parenthesized.c)),
-block.c,
-namespace.d(namespace.at.k, namespace.d, call.l(callee.name, parenthesized.c)),
-namespace.d(namespace.at.k, namespace.d, string.l)
+StyleSheet(
+  Comment,
+  NamespaceStatement(namespace,CallLiteral(CallTag,ParenthesizedContent)),
+  NamespaceStatement(namespace,StringLiteral),
+  NamespaceStatement(namespace,CallLiteral(CallTag,ParenthesizedContent)),
+  NamespaceStatement(namespace,NamespaceName,CallLiteral(CallTag,ParenthesizedContent)),
+  Comment,
+  NamespaceStatement(namespace,NamespaceName,CallLiteral(CallTag,ParenthesizedContent)),
+  NamespaceStatement(namespace,NamespaceName,StringLiteral))
 
 # Keyframes statements
 
@@ -47,11 +49,11 @@ namespace.d(namespace.at.k, namespace.d, string.l)
 
 ==>
 
-keyframes.s(keyframes.at.k, keyframes.definition.name, keyframe.l(
-  from.k, block(property.d(property.n, number.l(unit.n))),
-  number.l(unit.n), block(property.d(property.n, number.l(unit.n), important.k)),
-  block.c,
-  to.k, block(property.d(property.n, number.l(unit.n)))))
+StyleSheet(KeyframesStatement(keyframes,KeyframeName,KeyframeList(
+  from,Block(Declaration(PropertyName,NumberLiteral(Unit))),
+  NumberLiteral(Unit),Block(Declaration(PropertyName,NumberLiteral(Unit),Important)),
+  Comment,
+  to,Block(Declaration(PropertyName,NumberLiteral(Unit))))))
 
 # Media statements
 
@@ -62,12 +64,12 @@ keyframes.s(keyframes.at.k, keyframes.definition.name, keyframe.l(
 
 ==>
 
-media.s(media.at.k, binary.operator.q(binary.operator.q(keyword.q, operator.n, feature.q(feature.n, number.l(unit.n))), operator.n,
-  feature.q(feature.n, value.n)), block),
-media.s(media.at.k, feature.q(feature.n, number.l(unit.n)),
-  binary.operator.q(keyword.q, operator.n, feature.q(feature.n, value.n)), block),
-media.s(media.at.k, unary.operator.q(operator.k, binary.operator.q(keyword.q, operator.n, parenthesized.q(keyword.q))), block),
-media.s(media.at.k, unary.operator.q(operator.k, keyword.q), block)
+StyleSheet(
+  MediaStatement(media,BinaryQuery(BinaryQuery(KeywordQuery,LogicOp,FeatureQuery(FeatureName,NumberLiteral(Unit))),LogicOp,
+    FeatureQuery(FeatureName,ValueName)),Block),
+  MediaStatement(media,FeatureQuery(FeatureName,NumberLiteral(Unit)),BinaryQuery(KeywordQuery,LogicOp,FeatureQuery(FeatureName,ValueName)),Block),
+  MediaStatement(media,UnaryQuery(UnaryQueryOp,BinaryQuery(KeywordQuery,LogicOp,ParenthesizedQuery(KeywordQuery))),Block),
+  MediaStatement(media,UnaryQuery(UnaryQueryOp,KeywordQuery),Block))
 
 # Supports statements
 
@@ -80,12 +82,12 @@ media.s(media.at.k, unary.operator.q(operator.k, keyword.q), block)
 
 ==>
 
-supports.d(supports.at.k, feature.q(feature.n, value.n), block(
-  ruleSet.d(tag.name.selector, block(property.d(property.n, value.n))))),
-supports.d(supports.at.k, binary.operator.q(feature.q(feature.n, value.n), operator.n, feature.q(feature.n, value.n)), block),
-supports.d(supports.at.k, unary.operator.q(operator.k, parenthesized.q(binary.operator.q(feature.q(feature.n, value.n),
-  operator.n, feature.q(feature.n, value.n)))), block),
-supports.d(supports.at.k, unary.operator.q(operator.k, selector.q(selector.k, pseudoClass.s(pseudoClass.n, argument.list(value.n, value.n)))), block)
+StyleSheet(
+  SupportsStatement(supports,FeatureQuery(FeatureName,ValueName),Block(RuleSet(TagSelector(TagName),Block(Declaration(PropertyName,ValueName))))),
+  SupportsStatement(supports,BinaryQuery(FeatureQuery(FeatureName,ValueName),LogicOp,FeatureQuery(FeatureName,ValueName)),Block),
+  SupportsStatement(supports,UnaryQuery(UnaryQueryOp,ParenthesizedQuery(
+    BinaryQuery(FeatureQuery(FeatureName,ValueName),LogicOp,FeatureQuery(FeatureName,ValueName)))),Block),
+  SupportsStatement(supports,UnaryQuery(UnaryQueryOp,SelectorQuery(callee,PseudoClassSelector(PseudoClassName,ArgList(ValueName,ValueName)))),Block))
 
 # Charset statements
 
@@ -93,7 +95,7 @@ supports.d(supports.at.k, unary.operator.q(operator.k, selector.q(selector.k, ps
 
 ==>
 
-charset.d(charset.at.k, string.l)
+StyleSheet(CharsetStatement(charset,StringLiteral))
 
 # Other at-statements
 
@@ -104,7 +106,7 @@ charset.d(charset.at.k, string.l)
 
 ==>
 
-atRule.s(at.k, block(
-  property.d(property.n, string.l),
-  property.d(property.n, call.l(callee.name, string.l), call.e(callee.name, argument.list(string.l)),
-    call.l(callee.name, string.l), call.e(callee.name, argument.list(string.l)))))
+StyleSheet(AtRule(AtKeyword,Block(
+  Declaration(PropertyName,StringLiteral),
+  Declaration(PropertyName,CallLiteral(CallTag,StringLiteral),CallExpression(Callee,ArgList(StringLiteral)),
+    CallLiteral(CallTag,StringLiteral),CallExpression(Callee,ArgList(StringLiteral))))))

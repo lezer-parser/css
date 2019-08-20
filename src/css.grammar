@@ -4,178 +4,194 @@
   valueOp @left
 }
 
-@skip { whitespace | comment }
+@skip { whitespace | Comment }
 
-@top:stylesheet.document.lang=css { item+ }
+@top[name=StyleSheet,lang=css] { item+ }
 
 item {
-  ruleSet |
-  importStatement |
-  mediaStatement |
-  charsetStatement |
-  namespaceStatement |
-  keyframesStatement |
-  supportsStatement |
-  atRule
+  RuleSet |
+  ImportStatement |
+  MediaStatement |
+  CharsetStatement |
+  NamespaceStatement |
+  KeyframesStatement |
+  SupportsStatement |
+  AtRule
 }
 
-ruleSet:ruleSet.declaration.statement {
-  selector ("," selector)* block
+RuleSet {
+  selector ("," selector)* Block
 }
 
-importStatement:import.declaration.statement {
-  @specialize<atKeyword, "@import", :import.at.keyword> value commaSep<query> ";"
+ImportStatement {
+  @specialize[name=import,style=keyword.define]<AtKeyword, "@import"> value commaSep<query> ";"
 }
 
-mediaStatement:media.statement {
-  @specialize<atKeyword, "@media", :media.at.keyword> commaSep<query> block
+MediaStatement {
+  @specialize[name=media,style=keyword.control]<AtKeyword, "@media"> commaSep<query> Block
 }
 
-charsetStatement:charset.declaration.statement {
-  @specialize<atKeyword, "@charset", :charset.at.keyword> value ";"
+CharsetStatement {
+  @specialize[name=charset,style=keyword.define]<AtKeyword, "@charset"> value ";"
 }
 
-namespaceStatement:namespace.declaration.statement {
-  @specialize<atKeyword, "@namespace", :namespace.at.keyword>
-  identifier:namespace.definition.name?
-  (stringLiteral | callLiteral) ";"
+NamespaceStatement {
+  @specialize[name=namespace,style=keyword.define]<AtKeyword, "@namespace">
+  NamespaceName[style=name.namespace] { identifier }?
+  (StringLiteral | CallLiteral) ";"
 }
 
-keyframesStatement:keyframes.statement {
-  @specialize<atKeyword, "@keyframes", :keyframes.at.keyword> identifier:keyframes.definition.name keyframeList
+KeyframesStatement {
+  @specialize[name=keyframes,style=keyword.define]<AtKeyword, "@keyframes">
+  KeyframeName[style=name.label] { identifier }
+  KeyframeList
 }
 
-keyframeList:keyframe.list.block {
-  "{" ((kw<"from"> | kw<"to"> | numberLiteral) block)* "}"
+KeyframeList {
+  "{" ((kw<"from"> | kw<"to"> | NumberLiteral) Block)* "}"
 }
 
-supportsStatement:supports.declaration.statement {
-  @specialize<atKeyword, "@supports", :supports.at.keyword> query block
+SupportsStatement {
+  @specialize[name=supports,style=keyword.control]<AtKeyword, "@supports"> query Block
 }
 
-atRule:atRule.statement { atKeyword commaSep<query> (";" | block) }
+AtRule { AtKeyword commaSep<query> (";" | Block) }
 
-block:block { "{" ~item item* (declaration (";" ~item item* declaration?)*)? "}" }
+Block { "{" ~item item* (Declaration (";" ~item item* Declaration?)*)? "}" }
 
 selector {
-  universalSelector |
-  (~item identifier):tag.name.selector |
-  nestingSelector |
-  (selector? !attribute "." identifier:class.name):class.selector |
-  (selector? !attribute (":" | "::") (
-    identifier:pseudoClass.name |
-    @specialize<callee, "not", :pseudoClass.name> argList<selector> |
-    callee:pseudoClass.name argList<value+>)):pseudoClass.selector |
-  (selector? !attribute "#" identifier:id.name):id.selector |
-  (selector? !attribute "[" identifier:attribute.name (matchOp value)? "]"):attribute.selector |
-  (selector !structure childOp selector):child.selector |
-  (selector !structure descendantSelector selector):descendant.selector |
-  (selector !structure siblingOp selector):sibling.selector
+  UniversalSelector |
+  TagSelector { ~item TagName[style=name.type] { identifier } } |
+  NestingSelector |
+  ClassSelector { selector? !attribute "." ClassName[style=name.class] { identifier } } |
+  PseudoClassSelector {
+    selector? !attribute (":" | "::") (
+      PseudoClassName[style=name.constant] { identifier } |
+      @specialize[name=not,style=name.constant]<callee, "not"> ArgList<selector> |      
+      PseudoClassName[style=name.constant] { callee } ArgList<value+>) } |
+  IdSelector { selector? !attribute "#" IdName[style=name.label] { identifier } } |
+  AttributeSelector { selector? !attribute "[" AttributeName[style=name.property] { identifier } (MatchOp value)? "]" } |
+  ChildSelector { selector !structure ChildOp selector } |
+  DescendantSelector { selector !structure descendantOp selector } |
+  SiblingSelector { selector !structure SiblingOp selector }
 }
 
-numberLiteral:number.literal.expression {
-  numberLiteralInner unit?
+NumberLiteral[style=literal.number] {
+  numberLiteralInner Unit?
 }
 
-argList<content>:argument.list { "(" commaSep<content> ")" }
+ArgList<content> { "(" commaSep<content> ")" }
 
-declaration:property.declaration.statement {
-  identifier:property.name ":" value (","? value)* important?
+Declaration {
+  PropertyName[style=name.property] { identifier } defColon value (","? value)* Important?
 }
 
 query {
-  identifier:keyword.query |
-  ("(" identifier:feature.name ":" value+ ")"):feature.query |
-  (query !valueOp logicOp query):binary.operator.query |
-  (@specialize<identifier, "not" | "only", :operator.keyword> query):unary.operator.query |
-  ("(" query ")"):parenthesized.query |
-  (@specialize<callee, "selector", :selector.keyword> "(" selector ")"):selector.query
+  KeywordQuery[style=keyword] { identifier } |
+  FeatureQuery { "(" FeatureName[style=name.property] { identifier } defColon value+ ")" } |
+  BinaryQuery { query !valueOp LogicOp query } |
+  UnaryQuery { @specialize[name=UnaryQueryOp,style=keyword.operator]<identifier, "not" | "only"> query } |
+  ParenthesizedQuery { "(" query ")" } |
+  SelectorQuery { @specialize[name=callee,style=keyword]<callee, "selector"> "(" selector ")" }
 }
 
 value {
-  identifier:value.name.expression |
-  ("(" value ")"):parenthesized.expression |
-  colorLiteral |
-  numberLiteral |
-  stringLiteral |
-  (value !valueOp binOp value):binary.operator.expression |
-  callExpression |
-  callLiteral
+  ValueName[style=name.value] { identifier } |
+  ParenthesizedValue { "(" value ")" } |
+  ColorLiteral |
+  NumberLiteral |
+  StringLiteral |
+  BinaryExpression { value !valueOp BinOp value } |
+  CallExpression |
+  CallLiteral
 }
 
-callLiteral:call.literal.expression {
-  @specialize<callee, "url" | "url-prefix" | "domain" | "regexp", :callee.name> "(" (parenthesizedContent | stringLiteral) ")"
+CallLiteral {
+  @specialize[name=CallTag,style=keyword.expression]<callee, "url" | "url-prefix" | "domain" | "regexp">
+  "(" (ParenthesizedContent | StringLiteral) ")"
 }
 
-callExpression:call.expression {
-  callee:callee.name argList<value+>
+CallExpression {
+  Callee[style=name.variable] { callee } ArgList<value+>
 }
 
 commaSep<value> { "" | value ("," value)* }
 
-kw<term> { @specialize<identifier, term, :$term.keyword> }
+kw<term> { @specialize[name={term},style=keyword]<identifier, term> }
 
-@external-tokens descendant from "./tokens" {
-  descendantSelector
+@external tokens descendant from "./tokens" {
+  descendantOp
 }
 
-@external-tokens unitToken from "./tokens" {
-  unit:unit.name
+@external tokens unitToken from "./tokens" {
+  Unit[style=keyword.unit]
 }
 
-@external-tokens identifiers from "./tokens" {
+@external tokens identifiers from "./tokens" {
   callee,
   identifier
 }
 
 @tokens {
-  universalSelector:universal.operator.name { "*" }
+  UniversalSelector[style=operator.define] { "*" }
 
-  nestingSelector:nesting.operator.name { "&" }
+  NestingSelector[style=operator.define] { "&" }
 
-  atKeyword:at.keyword { "@" std.asciiLetter (std.asciiLetter | std.digit | "-")* }
+  AtKeyword[style=keyword] { "@" std.asciiLetter (std.asciiLetter | std.digit | "-")* }
 
-  matchOp:operator.name { [~^|*$]? "=" }
+  MatchOp[style=operator.compare] { $[~^|*$]? "=" }
 
-  childOp:operator.name { ">" ">"? }
+  ChildOp[style=operator.logic] { ">" ">"? }
 
-  siblingOp:operator.name { "~" | "+" }
+  SiblingOp[style=operator.logic] { "~" | "+" }
 
-  logicOp:operator.name { "and" | "or" }
+  LogicOp[style=operator.logic] { "and" | "or" }
 
-  binOp:operator.name { [+\-*/] }
+  BinOp[style=operator.arithmetic] { $[+\-*/] }
 
-  important:important.keyword { "!important" }
+  Important[style=keyword.modifier] { "!important" }
 
   whitespace { std.whitespace+ }
 
-  comment:block.comment { "/*" commentRest }
+  Comment[style=comment.block] { "/*" commentRest }
 
-  commentRest { [^*] commentRest | "*" commentAfterStar }
+  commentRest { ![*] commentRest | "*" commentAfterStar }
 
-  commentAfterStar { "/" | "*" commentAfterStar | [^/*] commentRest }
+  commentAfterStar { "/" | "*" commentAfterStar | ![/*] commentRest }
 
-  @precedence { comment, binOp }
+  @precedence { Comment, BinOp }
 
-  hexDigit { std.digit | [a-fA-F] }
+  hexDigit { std.digit | $[a-fA-F] }
 
-  parenthesizedContent:parenthesized.content { [^'")] [^)]+ }
+  ParenthesizedContent[style=literal] { !['")] ![)]+ }
 
-  @precedence { whitespace, parenthesizedContent, comment }
+  @precedence { whitespace, ParenthesizedContent, Comment }
 
-  colorLiteral:color.literal.expression {
+  ColorLiteral[style=literal.color] {
     "#" hexDigit hexDigit hexDigit (hexDigit (hexDigit hexDigit (hexDigit hexDigit)?)?)?
   }
 
   numberLiteralInner { ("+" | "-")? (std.digit+ ("." std.digit*)? | "." std.digit+) (("e" | "E") ("+" | "-")? std.digit+)? }
 
-  @precedence { numberLiteralInner, binOp, siblingOp }
+  @precedence { numberLiteralInner, BinOp, SiblingOp }
 
-  stringLiteral:string.literal.expression { "\"" ([^"\n\\] | "\\" _)* "\"" | "'" ([^'\n\\] | "\\" _)* "'" }
+  StringLiteral[style=literal.string] { "\"" (!["\n\\] | "\\" _)* "\"" | "'" (!['\n\\] | "\\" _)* "'" }
+
+  defColon[name="\":\"",style=punctuation.define] { ":" }
+
+  "::"[style=operator.deref]
+  ":"[style=operator.deref]
+  "#"[style=operator.deref]
+
+  ";"[style=punctuation.separator]
+  ","[style=punctuation.separator]
+
+  "("[style=bracket.paren.open]
+  ")"[style=bracket.paren.close]
+  "["[style=bracket.square.open]
+  "]"[style=bracket.square.close]
+  "{"[style=bracket.brace.open]
+  "}"[style=bracket.brace.close]
 }
 
-@tags {
-  @detect-delim
-  @punctuation<"()[]{},:.;#">
-  "::":doubleColon.punctuation
-}
+@detectDelim

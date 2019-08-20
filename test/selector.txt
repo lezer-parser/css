@@ -4,7 +4,7 @@
 
 ==>
 
-ruleSet.d(universal.o, block)
+StyleSheet(RuleSet(UniversalSelector,Block))
 
 # Type selectors
 
@@ -13,8 +13,9 @@ h1, h2, h3, h4 {}
 
 ==>
 
-ruleSet.d(tag.name.selector, tag.name.selector, block),
-ruleSet.d(tag.name.selector, tag.name.selector, tag.name.selector, tag.name.selector, block)
+StyleSheet(
+  RuleSet(TagSelector(TagName),TagSelector(TagName),Block),
+  RuleSet(TagSelector(TagName),TagSelector(TagName),TagSelector(TagName),TagSelector(TagName),Block))
 
 # Class selectors
 
@@ -23,8 +24,9 @@ div.class-b, .class-c.class-d {}
 
 ==>
 
-ruleSet.d(class.s(class.n), block),
-ruleSet.d(class.s(tag.name.selector, class.n), class.s(class.s(class.n), class.n), block)
+StyleSheet(
+  RuleSet(ClassSelector(ClassName),Block),
+  RuleSet(ClassSelector(TagSelector(TagName),ClassName),ClassSelector(ClassSelector(ClassName),ClassName),Block))
 
 # Id selectors
 
@@ -32,7 +34,7 @@ ruleSet.d(class.s(tag.name.selector, class.n), class.s(class.s(class.n), class.n
 
 ==>
 
-ruleSet.d(id.s(id.n), id.s(tag.name.selector, id.n), block)
+StyleSheet(RuleSet(IdSelector(IdName),IdSelector(TagSelector(TagName),IdName),Block))
 
 # Attribute selectors
 
@@ -43,10 +45,11 @@ a[b] {}
 
 ==>
 
-ruleSet.d(attribute.s(attribute.n), block),
-ruleSet.d(attribute.s(attribute.n, operator.n, value.n), block),
-ruleSet.d(attribute.s(attribute.n, operator.n, value.n), block),
-ruleSet.d(attribute.s(tag.name.selector, attribute.n), block)
+StyleSheet(
+  RuleSet(AttributeSelector(AttributeName),Block),
+  RuleSet(AttributeSelector(AttributeName,MatchOp,ValueName),Block),
+  RuleSet(AttributeSelector(AttributeName,MatchOp,ValueName),Block),
+  RuleSet(AttributeSelector(TagSelector(TagName),AttributeName),Block))
 
 # Pseudo-class selectors
 
@@ -55,8 +58,9 @@ a:hover {}
 
 ==>
 
-ruleSet.d(pseudoClass.s(tag.name.selector, pseudoClass.n), block),
-ruleSet.d(pseudoClass.s(pseudoClass.n, argument.list(number.l)), block)
+StyleSheet(
+  RuleSet(PseudoClassSelector(TagSelector(TagName),PseudoClassName),Block),
+  RuleSet(PseudoClassSelector(PseudoClassName,ArgList(NumberLiteral)),Block))
 
 # Pseudo-element selectors
 
@@ -64,7 +68,7 @@ a::first-line {}
 
 ==>
 
-ruleSet.d(pseudoClass.s(tag.name.selector, pseudoClass.n), block)
+StyleSheet(RuleSet(PseudoClassSelector(TagSelector(TagName),PseudoClassName),Block))
 
 # Child selectors
 
@@ -73,8 +77,9 @@ c > d > e {}
 
 ==>
 
-ruleSet.d(child.s(tag.name.selector, operator.n, tag.name.selector), block),
-ruleSet.d(child.s(child.s(tag.name.selector, operator.n, tag.name.selector), operator.n, tag.name.selector), block)
+StyleSheet(
+  RuleSet(ChildSelector(TagSelector(TagName),ChildOp,TagSelector(TagName)),Block),
+  RuleSet(ChildSelector(ChildSelector(TagSelector(TagName),ChildOp,TagSelector(TagName)),ChildOp,TagSelector(TagName)),Block))
 
 # Descendant selectors
 
@@ -83,8 +88,9 @@ c d e {}
 
 ==>
 
-ruleSet.d(descendant.s(tag.name.selector, tag.name.selector), block),
-ruleSet.d(descendant.s(descendant.s(tag.name.selector, tag.name.selector), tag.name.selector), block)
+StyleSheet(
+  RuleSet(DescendantSelector(TagSelector(TagName),TagSelector(TagName)),Block),
+  RuleSet(DescendantSelector(DescendantSelector(TagSelector(TagName),TagSelector(TagName)),TagSelector(TagName)),Block))
 
 # Nesting selectors
 
@@ -96,11 +102,10 @@ a {
 
 ==>
 
-ruleSet.d(tag.name.selector, block(
-  ruleSet.d(class.s(nesting.o, class.n), block),
-  ruleSet.d(descendant.s(nesting.o, tag.name.selector), block),
-  ruleSet.d(child.s(nesting.o, operator.n, tag.name.selector), block)
-))
+StyleSheet(RuleSet(TagSelector(TagName),Block(
+  RuleSet(ClassSelector(NestingSelector,ClassName),Block),
+  RuleSet(DescendantSelector(NestingSelector,TagSelector(TagName)),Block),
+  RuleSet(ChildSelector(NestingSelector,ChildOp,TagSelector(TagName)),Block))))
 
 # Sibling selectors
 
@@ -109,9 +114,9 @@ a.b ~ c.d {}
 
 ==>
 
-ruleSet.d(sibling.s(class.s(tag.name.selector, class.n), operator.n, class.s(tag.name.selector, class.n)), block),
-ruleSet.d(sibling.s(class.s(class.s(class.n), class.n), operator.n,
-  class.s(class.s(class.n), class.n)), block)
+StyleSheet(
+  RuleSet(SiblingSelector(ClassSelector(TagSelector(TagName),ClassName),SiblingOp,ClassSelector(TagSelector(TagName),ClassName)),Block),
+  RuleSet(SiblingSelector(ClassSelector(ClassSelector(ClassName),ClassName),SiblingOp,ClassSelector(ClassSelector(ClassName),ClassName)),Block))
 
 # The :not selector
 
@@ -120,5 +125,6 @@ a:not(:hover) {}
 
 ==>
 
-ruleSet.d(pseudoClass.s(tag.name.selector, pseudoClass.n, argument.list(pseudoClass.s(pseudoClass.n))), block),
-ruleSet.d(pseudoClass.s(class.s(class.n), pseudoClass.n, argument.list(child.s(tag.name.selector, operator.n, class.s(class.n)))), block)
+StyleSheet(
+  RuleSet(PseudoClassSelector(TagSelector(TagName),not,ArgList(PseudoClassSelector(PseudoClassName))),Block),
+  RuleSet(PseudoClassSelector(ClassSelector(ClassName),not,ArgList(ChildSelector(TagSelector(TagName),ChildOp,ClassSelector(ClassName)))),Block))

@@ -6,7 +6,9 @@ a {
 
 ==>
 
-ruleSet.d(tag.name.selector, block(property.d(property.n, call.expression(callee.name, argument.list(number.l, number.l, number.l, number.l)))))
+StyleSheet(
+  RuleSet(TagSelector(TagName),Block(
+    Declaration(PropertyName,CallExpression(Callee,ArgList(NumberLiteral,NumberLiteral,NumberLiteral,NumberLiteral))))))
 
 # Calls where each argument has multiple values
 
@@ -17,12 +19,13 @@ div {
 
 ==>
 
-ruleSet.d(tag.name.selector, block(
-  property.d(property.n, call.expression(callee.name, argument.list(value.n, value.n, number.l(unit.n)))),
-  property.d(property.n, call.expression(callee.name, argument.list(
-    number.l(unit.n), number.l(unit.n), number.l(unit.n), number.l(unit.n), number.l(unit.n),
-    number.l(unit.n), number.l(unit.n), number.l(unit.n), number.l(unit.n), number.l(unit.n),
-    number.l(unit.n), number.l(unit.n), number.l(unit.n), number.l(unit.n), number.l(unit.n), number.l(unit.n))))))
+StyleSheet(RuleSet(TagSelector(TagName),Block(
+  Declaration(PropertyName,CallExpression(Callee,ArgList(ValueName,ValueName,NumberLiteral(Unit)))),
+  Declaration(PropertyName,CallExpression(Callee,ArgList(
+    NumberLiteral(Unit),NumberLiteral(Unit),NumberLiteral(Unit),NumberLiteral(Unit),
+    NumberLiteral(Unit),NumberLiteral(Unit),NumberLiteral(Unit),NumberLiteral(Unit),
+    NumberLiteral(Unit),NumberLiteral(Unit),NumberLiteral(Unit),NumberLiteral(Unit),
+    NumberLiteral(Unit),NumberLiteral(Unit),NumberLiteral(Unit),NumberLiteral(Unit)))))))
 
 # Color literals
 
@@ -33,9 +36,9 @@ a {
 
 ==>
 
-ruleSet.d(tag.name.selector, block(
-  property.d(property.n, color.l),
-  property.d(property.n, color.l)))
+StyleSheet(RuleSet(TagSelector(TagName),Block(
+  Declaration(PropertyName,ColorLiteral),
+  Declaration(PropertyName,ColorLiteral))))
 
 # Numbers
 
@@ -49,12 +52,12 @@ a {
 
 ==>
 
-ruleSet.d(tag.name.selector, block(
-  property.d(property.n, number.l(unit.n)),
-  property.d(property.n, number.l(unit.n)),
-  property.d(property.n, number.l(unit.n)),
-  property.d(property.n, number.l(unit.n)),
-  property.d(property.n, number.l(unit.n))))
+StyleSheet(RuleSet(TagSelector(TagName),Block(
+  Declaration(PropertyName,NumberLiteral(Unit)),
+  Declaration(PropertyName,NumberLiteral(Unit)),
+  Declaration(PropertyName,NumberLiteral(Unit)),
+  Declaration(PropertyName,NumberLiteral(Unit)),
+  Declaration(PropertyName,NumberLiteral(Unit)))))
 
 # Binary arithmetic operators
 
@@ -66,14 +69,14 @@ a {
 
 ==>
 
-ruleSet.d(tag.name.selector, block(
-  property.d(property.n, call.expression(callee.name, argument.list(binary.o(number.l(unit.n), operator.name, number.l(unit.n))))),
-  property.d(property.n, binary.o(number.l, operator.name, number.l)),
-  property.d(property.n, call.expression(callee.name, argument.list(
-    binary.o(binary.o(number.l(unit.n), operator.name,
-      parenthesized.e(binary.o(number.l, operator.name, number.l))), operator.name,
-      parenthesized.e(binary.o(parenthesized.e(binary.o(number.l(unit.n), operator.name, number.l(unit.n))),
-        operator.name, parenthesized.e(binary.o(number.l, operator.name, number.l))))))))))
+StyleSheet(RuleSet(TagSelector(TagName),Block(
+  Declaration(PropertyName,CallExpression(Callee,ArgList(BinaryExpression(NumberLiteral(Unit),BinOp,NumberLiteral(Unit))))),
+  Declaration(PropertyName,BinaryExpression(NumberLiteral,BinOp,NumberLiteral)),
+  Declaration(PropertyName,CallExpression(Callee,ArgList(
+    BinaryExpression(BinaryExpression(NumberLiteral(Unit),BinOp,ParenthesizedValue(
+      BinaryExpression(NumberLiteral,BinOp,NumberLiteral))),BinOp,ParenthesizedValue(
+      BinaryExpression(ParenthesizedValue(BinaryExpression(NumberLiteral(Unit),BinOp,NumberLiteral(Unit))),BinOp,
+      ParenthesizedValue(BinaryExpression(NumberLiteral,BinOp,NumberLiteral)))))))))))
 
 # Strings
 
@@ -84,9 +87,7 @@ a {
 
 ==>
 
-ruleSet.d(tag.name.selector, block(
-  property.d(property.n, string.l),
-  property.d(property.n, string.l)))
+StyleSheet(RuleSet(TagSelector(TagName),Block(Declaration(PropertyName,StringLiteral),Declaration(PropertyName,StringLiteral))))
 
 # URLs
 
@@ -96,8 +97,7 @@ a {
 
 ==>
 
-ruleSet.d(tag.name.selector, block(
-  property.d(property.n, call.l(callee.name, parenthesized.c))))
+StyleSheet(RuleSet(TagSelector(TagName),Block(Declaration(PropertyName,CallLiteral(CallTag,ParenthesizedContent)))))
 
 # Important declarations
 
@@ -107,8 +107,7 @@ a {
 
 ==>
 
-ruleSet.d(tag.name.selector, block(
-  property.d(property.n, value.n, important.k)))
+StyleSheet(RuleSet(TagSelector(TagName),Block(Declaration(PropertyName,ValueName,Important))))
 
 # Comments right after numbers
 
@@ -119,9 +118,9 @@ a {
 
 ==>
 
-ruleSet.d(tag.name.selector, block(
-  property.d(property.n, call.expression(callee.name, argument.list(number.l(unit.n), block.c, value.n, number.l(unit.n), number.l(unit.n)))),
-  property.d(property.n, call.expression(callee.name, argument.list(number.l(unit.n), number.l(unit.n), number.l(unit.n), number.l(unit.n))))))
+StyleSheet(RuleSet(TagSelector(TagName),Block(
+  Declaration(PropertyName,CallExpression(Callee,ArgList(NumberLiteral(Unit),Comment,ValueName,NumberLiteral(Unit),NumberLiteral(Unit)))),
+  Declaration(PropertyName,CallExpression(Callee,ArgList(NumberLiteral(Unit),NumberLiteral(Unit),NumberLiteral(Unit),NumberLiteral(Unit)))))))
 
 # Unfinished rule
 
@@ -129,4 +128,4 @@ a { foo: 2
 
 ==>
 
-ruleSet.d(tag.name.selector, block(property.d(property.n, number.l), error))
+StyleSheet(RuleSet(TagSelector(TagName),Block(Declaration(PropertyName,NumberLiteral),⚠)))
