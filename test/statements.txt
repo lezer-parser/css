@@ -87,7 +87,7 @@ StyleSheet(
   SupportsStatement(supports,BinaryQuery(FeatureQuery(FeatureName,ValueName),LogicOp,FeatureQuery(FeatureName,ValueName)),Block),
   SupportsStatement(supports,UnaryQuery(UnaryQueryOp,ParenthesizedQuery(
     BinaryQuery(FeatureQuery(FeatureName,ValueName),LogicOp,FeatureQuery(FeatureName,ValueName)))),Block),
-  SupportsStatement(supports,UnaryQuery(UnaryQueryOp,SelectorQuery(callee,PseudoClassSelector(PseudoClassName,ArgList(ValueName,ValueName)))),Block))
+  SupportsStatement(supports,UnaryQuery(UnaryQueryOp,SelectorQuery(callee,PseudoClassSelector(PseudoOp,PseudoClassName,ArgList(ValueName,ValueName)))),Block))
 
 # Charset statements
 

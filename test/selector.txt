@@ -59,8 +59,8 @@ a:hover {}
 ==>
 
 StyleSheet(
-  RuleSet(PseudoClassSelector(TagSelector(TagName),PseudoClassName),Block),
-  RuleSet(PseudoClassSelector(PseudoClassName,ArgList(NumberLiteral)),Block))
+  RuleSet(PseudoClassSelector(TagSelector(TagName),PseudoOp,PseudoClassName),Block),
+  RuleSet(PseudoClassSelector(PseudoOp,PseudoClassName,ArgList(NumberLiteral)),Block))
 
 # Pseudo-element selectors
 
@@ -68,7 +68,7 @@ a::first-line {}
 
 ==>
 
-StyleSheet(RuleSet(PseudoClassSelector(TagSelector(TagName),PseudoClassName),Block))
+StyleSheet(RuleSet(PseudoClassSelector(TagSelector(TagName),PseudoOp,PseudoClassName),Block))
 
 # Child selectors
 
@@ -126,5 +126,5 @@ a:not(:hover) {}
 ==>
 
 StyleSheet(
-  RuleSet(PseudoClassSelector(TagSelector(TagName),not,ArgList(PseudoClassSelector(PseudoClassName))),Block),
-  RuleSet(PseudoClassSelector(ClassSelector(ClassName),not,ArgList(ChildSelector(TagSelector(TagName),ChildOp,ClassSelector(ClassName)))),Block))
+  RuleSet(PseudoClassSelector(TagSelector(TagName),PseudoOp,not,ArgList(PseudoClassSelector(PseudoOp,PseudoClassName))),Block),
+  RuleSet(PseudoClassSelector(ClassSelector(ClassName),PseudoOp,not,ArgList(ChildSelector(TagSelector(TagName),ChildOp,ClassSelector(ClassName)))),Block))

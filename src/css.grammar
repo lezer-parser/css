@@ -24,26 +24,26 @@ RuleSet {
 }
 
 ImportStatement {
-  @specialize[name=import,style=keyword.define]<AtKeyword, "@import"> value commaSep<query> ";"
+  @specialize[name=import]<AtKeyword, "@import"> value commaSep<query> ";"
 }
 
 MediaStatement {
-  @specialize[name=media,style=keyword.control]<AtKeyword, "@media"> commaSep<query> Block
+  @specialize[name=media]<AtKeyword, "@media"> commaSep<query> Block
 }
 
 CharsetStatement {
-  @specialize[name=charset,style=keyword.define]<AtKeyword, "@charset"> value ";"
+  @specialize[name=charset]<AtKeyword, "@charset"> value ";"
 }
 
 NamespaceStatement {
-  @specialize[name=namespace,style=keyword.define]<AtKeyword, "@namespace">
-  NamespaceName[style=name.namespace] { identifier }?
+  @specialize[name=namespace]<AtKeyword, "@namespace">
+  NamespaceName { identifier }?
   (StringLiteral | CallLiteral) ";"
 }
 
 KeyframesStatement {
-  @specialize[name=keyframes,style=keyword.define]<AtKeyword, "@keyframes">
-  KeyframeName[style=name.label] { identifier }
+  @specialize[name=keyframes]<AtKeyword, "@keyframes">
+  KeyframeName { identifier }
   KeyframeList
 }
 
@@ -52,7 +52,7 @@ KeyframeList {
 }
 
 SupportsStatement {
-  @specialize[name=supports,style=keyword.control]<AtKeyword, "@supports"> query Block
+  @specialize[name=supports]<AtKeyword, "@supports"> query Block
 }
 
 AtRule { AtKeyword commaSep<query> (";" | Block) }
@@ -61,42 +61,42 @@ Block { "{" ~item item* (Declaration (";" ~item item* Declaration?)*)? "}" }
 
 selector {
   UniversalSelector |
-  TagSelector { ~item TagName[style=name.type] { identifier } } |
+  TagSelector { ~item TagName { identifier } } |
   NestingSelector |
-  ClassSelector { selector? !attribute "." ClassName[style=name.class] { identifier } } |
+  ClassSelector { selector? !attribute "." ClassName { identifier } } |
   PseudoClassSelector {
-    selector? !attribute (":" | "::") (
-      PseudoClassName[style=name.constant] { identifier } |
-      @specialize[name=not,style=name.constant]<callee, "not"> ArgList<selector> |      
-      PseudoClassName[style=name.constant] { callee } ArgList<value+>) } |
-  IdSelector { selector? !attribute "#" IdName[style=name.label] { identifier } } |
-  AttributeSelector { selector? !attribute "[" AttributeName[style=name.property] { identifier } (MatchOp value)? "]" } |
+    selector? !attribute PseudoOp (
+      PseudoClassName { identifier } |
+      @specialize[name=not]<callee, "not"> ArgList<selector> |      
+      PseudoClassName { callee } ArgList<value+>) } |
+  IdSelector { selector? !attribute "#" IdName { identifier } } |
+  AttributeSelector { selector? !attribute "[" AttributeName { identifier } (MatchOp value)? "]" } |
   ChildSelector { selector !structure ChildOp selector } |
   DescendantSelector { selector !structure descendantOp selector } |
   SiblingSelector { selector !structure SiblingOp selector }
 }
 
-NumberLiteral[style=literal.number] {
+NumberLiteral {
   numberLiteralInner Unit?
 }
 
 ArgList<content> { "(" commaSep<content> ")" }
 
 Declaration {
-  PropertyName[style=name.property] { identifier } defColon value (","? value)* Important?
+  PropertyName { identifier } ":" value (","? value)* Important?
 }
 
 query {
-  KeywordQuery[style=keyword] { identifier } |
-  FeatureQuery { "(" FeatureName[style=name.property] { identifier } defColon value+ ")" } |
+  KeywordQuery { identifier } |
+  FeatureQuery { "(" FeatureName { identifier } ":" value+ ")" } |
   BinaryQuery { query !valueOp LogicOp query } |
-  UnaryQuery { @specialize[name=UnaryQueryOp,style=keyword.operator]<identifier, "not" | "only"> query } |
+  UnaryQuery { @specialize[name=UnaryQueryOp]<identifier, "not" | "only"> query } |
   ParenthesizedQuery { "(" query ")" } |
-  SelectorQuery { @specialize[name=callee,style=keyword]<callee, "selector"> "(" selector ")" }
+  SelectorQuery { @specialize[name=callee]<callee, "selector"> "(" selector ")" }
 }
 
 value {
-  ValueName[style=name.value] { identifier } |
+  ValueName { identifier } |
   ParenthesizedValue { "(" value ")" } |
   ColorLiteral |
   NumberLiteral |
@@ -107,24 +107,24 @@ value {
 }
 
 CallLiteral {
-  @specialize[name=CallTag,style=keyword.expression]<callee, "url" | "url-prefix" | "domain" | "regexp">
+  @specialize[name=CallTag]<callee, "url" | "url-prefix" | "domain" | "regexp">
   "(" (ParenthesizedContent | StringLiteral) ")"
 }
 
 CallExpression {
-  Callee[style=name.variable] { callee } ArgList<value+>
+  Callee { callee } ArgList<value+>
 }
 
 commaSep<value> { "" | value ("," value)* }
 
-kw<term> { @specialize[name={term},style=keyword]<identifier, term> }
+kw<term> { @specialize[name={term}]<identifier, term> }
 
 @external tokens descendant from "./tokens" {
   descendantOp
 }
 
 @external tokens unitToken from "./tokens" {
-  Unit[style=keyword.unit]
+  Unit
 }
 
 @external tokens identifiers from "./tokens" {
@@ -133,27 +133,27 @@ kw<term> { @specialize[name={term},style=keyword]<identifier, term> }
 }
 
 @tokens {
-  UniversalSelector[style=operator.define] { "*" }
+  UniversalSelector { "*" }
 
-  NestingSelector[style=operator.define] { "&" }
+  NestingSelector { "&" }
 
-  AtKeyword[style=keyword] { "@" std.asciiLetter (std.asciiLetter | std.digit | "-")* }
+  AtKeyword { "@" std.asciiLetter (std.asciiLetter | std.digit | "-")* }
 
-  MatchOp[style=operator.compare] { $[~^|*$]? "=" }
+  MatchOp { $[~^|*$]? "=" }
 
-  ChildOp[style=operator.logic] { ">" ">"? }
+  ChildOp { ">" ">"? }
 
-  SiblingOp[style=operator.logic] { "~" | "+" }
+  SiblingOp { "~" | "+" }
 
-  LogicOp[style=operator.logic] { "and" | "or" }
+  LogicOp { "and" | "or" }
 
-  BinOp[style=operator.arithmetic] { $[+\-*/] }
+  BinOp { $[+\-*/] }
 
-  Important[style=keyword.modifier] { "!important" }
+  Important { "!important" }
 
   whitespace { std.whitespace+ }
 
-  Comment[style=comment.block] { "/*" commentRest }
+  Comment { "/*" commentRest }
 
   commentRest { ![*] commentRest | "*" commentAfterStar }
 
@@ -163,11 +163,11 @@ kw<term> { @specialize[name={term},style=keyword]<identifier, term> }
 
   hexDigit { std.digit | $[a-fA-F] }
 
-  ParenthesizedContent[style=literal] { !['")] ![)]+ }
+  ParenthesizedContent { !['")] ![)]+ }
 
   @precedence { whitespace, ParenthesizedContent, Comment }
 
-  ColorLiteral[style=literal.color] {
+  ColorLiteral {
     "#" hexDigit hexDigit hexDigit (hexDigit (hexDigit hexDigit (hexDigit hexDigit)?)?)?
   }
 
@@ -175,23 +175,14 @@ kw<term> { @specialize[name={term},style=keyword]<identifier, term> }
 
   @precedence { numberLiteralInner, BinOp, SiblingOp }
 
-  StringLiteral[style=literal.string] { "\"" (!["\n\\] | "\\" _)* "\"" | "'" (!['\n\\] | "\\" _)* "'" }
+  StringLiteral { "\"" (!["\n\\] | "\\" _)* "\"" | "'" (!['\n\\] | "\\" _)* "'" }
 
-  defColon[name="\":\"",style=punctuation.define] { ":" }
+  PseudoOp { ":" | "::" }
+  "#"
 
-  "::"[style=operator.deref]
-  ":"[style=operator.deref]
-  "#"[style=operator.deref]
+  ":" ";" ","
 
-  ";"[style=punctuation.separator]
-  ","[style=punctuation.separator]
-
-  "("[style=bracket.paren.open]
-  ")"[style=bracket.paren.close]
-  "["[style=bracket.square.open]
-  "]"[style=bracket.square.close]
-  "{"[style=bracket.brace.open]
-  "}"[style=bracket.brace.close]
+  "(" ")" "[" "]" "{" "}"
 }
 
 @detectDelim
