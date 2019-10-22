@@ -6,7 +6,7 @@
 
 @skip { whitespace | Comment }
 
-@top[name=StyleSheet,lang=css] { item+ }
+@top[name=StyleSheet] { item+ }
 
 item {
   RuleSet |
