@@ -14,6 +14,10 @@
   "dependencies": {
     "lezer": "^0.7.0"
   },
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/lezer-parser/css.git"
+  },
   "scripts": {
     "build": "lezer-generator src/css.grammar -o src/parser && rollup -c",
     "build-debug": "lezer-generator src/css.grammar --names -o src/parser && rollup -c",
