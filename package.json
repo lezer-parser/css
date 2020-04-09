@@ -1,6 +1,6 @@
 {
   "name": "lezer-css",
-  "version": "0.8.2",
+  "version": "0.8.3",
   "description": "lezer-based CSS grammar",
   "main": "dist/index.cjs",
   "type": "module",
