@@ -61,11 +61,11 @@ Block { "{" ~item item* (Declaration (";" ~item item* Declaration?)*)? "}" }
 
 selector {
   UniversalSelector |
-  TagSelector { ~item TagName { identifier } } |
+  TagSelector { ~item TagName { identifier ~item } } |
   NestingSelector |
   ClassSelector { selector? !attribute "." ClassName { identifier } } |
   PseudoClassSelector {
-    selector? !attribute PseudoOp (
+    selector? !attribute (":" | "::") (
       PseudoClassName { identifier } |
       @specialize[name=not]<callee, "not"> ArgList<selector> |      
       PseudoClassName { callee } ArgList<value+>) } |
@@ -83,7 +83,7 @@ NumberLiteral {
 ArgList<content> { "(" commaSep<content> ")" }
 
 Declaration {
-  PropertyName { identifier } ":" value (","? value)* Important?
+  PropertyName { identifier ~item } ":" value (","? value)* Important?
 }
 
 query {
@@ -177,10 +177,9 @@ kw<term> { @specialize[name={term}]<identifier, term> }
 
   StringLiteral { "\"" (!["\n\\] | "\\" _)* "\"" | "'" (!['\n\\] | "\\" _)* "'" }
 
-  PseudoOp { ":" | "::" }
   "#"
 
-  ":" ";" ","
+  ":" "::" ";" ","
 
   "(" ")" "[" "]" "{" "}"
 }
