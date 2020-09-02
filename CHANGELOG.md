@@ -1,3 +1,9 @@
+## 0.10.1 (2020-09-02)
+
+### Bug fixes
+
+Fix a conflicting pair of tokens that the generator previously didn't catch.
+
 ## 0.10.0 (2020-08-07)
 
 ### Breaking changes
