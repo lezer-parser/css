@@ -24,25 +24,25 @@ RuleSet {
 }
 
 ImportStatement {
-  @specialize[name=import]<AtKeyword, "@import"> value commaSep<query> ";"
+  @specialize[@name=import]<AtKeyword, "@import"> value commaSep<query> ";"
 }
 
 MediaStatement {
-  @specialize[name=media]<AtKeyword, "@media"> commaSep<query> Block
+  @specialize[@name=media]<AtKeyword, "@media"> commaSep<query> Block
 }
 
 CharsetStatement {
-  @specialize[name=charset]<AtKeyword, "@charset"> value ";"
+  @specialize[@name=charset]<AtKeyword, "@charset"> value ";"
 }
 
 NamespaceStatement {
-  @specialize[name=namespace]<AtKeyword, "@namespace">
+  @specialize[@name=namespace]<AtKeyword, "@namespace">
   NamespaceName { identifier }?
   (StringLiteral | CallLiteral) ";"
 }
 
 KeyframesStatement {
-  @specialize[name=keyframes]<AtKeyword, "@keyframes">
+  @specialize[@name=keyframes]<AtKeyword, "@keyframes">
   KeyframeName { identifier }
   KeyframeList
 }
@@ -52,7 +52,7 @@ KeyframeList {
 }
 
 SupportsStatement {
-  @specialize[name=supports]<AtKeyword, "@supports"> query Block
+  @specialize[@name=supports]<AtKeyword, "@supports"> query Block
 }
 
 AtRule { AtKeyword commaSep<query> (";" | Block) }
@@ -67,7 +67,7 @@ selector {
   PseudoClassSelector {
     selector? !attribute (":" | "::") (
       PseudoClassName { identifier } |
-      @specialize[name=not]<callee, "not"> ArgList<selector> |      
+      @specialize[@name=not]<callee, "not"> ArgList<selector> |
       PseudoClassName { callee } ArgList<value+>) } |
   IdSelector { selector? !attribute "#" IdName { identifier } } |
   AttributeSelector { selector? !attribute "[" AttributeName { identifier } (MatchOp value)? "]" } |
@@ -90,9 +90,9 @@ query {
   KeywordQuery { identifier } |
   FeatureQuery { "(" FeatureName { identifier } ":" value+ ")" } |
   BinaryQuery { query !valueOp LogicOp query } |
-  UnaryQuery { @specialize[name=UnaryQueryOp]<identifier, "not" | "only"> query } |
+  UnaryQuery { @specialize[@name=UnaryQueryOp]<identifier, "not" | "only"> query } |
   ParenthesizedQuery { "(" query ")" } |
-  SelectorQuery { @specialize[name=callee]<callee, "selector"> "(" selector ")" }
+  SelectorQuery { @specialize[@name=callee]<callee, "selector"> "(" selector ")" }
 }
 
 value {
@@ -107,7 +107,7 @@ value {
 }
 
 CallLiteral {
-  @specialize[name=CallTag]<callee, "url" | "url-prefix" | "domain" | "regexp">
+  @specialize[@name=CallTag]<callee, "url" | "url-prefix" | "domain" | "regexp">
   "(" (ParenthesizedContent | StringLiteral) ")"
 }
 
@@ -117,7 +117,7 @@ CallExpression {
 
 commaSep<value> { "" | value ("," value)* }
 
-kw<term> { @specialize[name={term}]<identifier, term> }
+kw<term> { @specialize[@name={term}]<identifier, term> }
 
 @external tokens descendant from "./tokens" {
   descendantOp
