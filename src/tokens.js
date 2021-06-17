@@ -13,39 +13,36 @@ function isAlpha(ch) { return ch >= 65 && ch <= 90 || ch >= 97 && ch <= 122 || c
 
 function isDigit(ch) { return ch >= 48 && ch <= 57 }
 
-export const identifiers = new ExternalTokenizer((input, token) => {
-  let start = token.start, pos = start, inside = false
-  for (;;) {
-    let next = input.get(pos)
+export const identifiers = new ExternalTokenizer(input => {
+  for (let inside = false, i = 0;; i++) {
+    let {next} = input
     if (isAlpha(next) || next == dash || next == underscore || (inside && isDigit(next))) {
-      if (!inside && (next != dash || pos > start)) inside = true
-      pos++
-      continue
+      if (!inside && (next != dash || i > 0)) inside = true
+      input.advance()
+    } else {
+      if (inside)
+        input.acceptToken(next == parenL ? callee : identifier)
+      break
     }
-    if (inside)
-      token.accept(next == parenL ? callee : identifier, pos)
-    break
   }
 })
 
-export const descendant = new ExternalTokenizer((input, token) => {
-  if (space.includes(input.get(token.start - 1))) {
-    let next = input.get(token.start)
+export const descendant = new ExternalTokenizer(input => {
+  if (space.includes(input.peek(-1))) {
+    let {next} = input
     if (isAlpha(next) || next == underscore || next == hash || next == period ||
         next == bracketL || next == colon || next == dash)
-      token.accept(descendantOp, token.start)
+      input.acceptToken(descendantOp)
   }
 })
 
-export const unitToken = new ExternalTokenizer((input, token) => {
-  let {start} = token
-  if (!space.includes(input.get(start - 1))) {
-    let next = input.get(start)
-    if (next == percent) token.accept(Unit, start + 1)
+export const unitToken = new ExternalTokenizer(input => {
+  if (!space.includes(input.peek(-1))) {
+    let {next} = input
+    if (next == percent) { input.advance(); input.acceptToken(Unit) }
     if (isAlpha(next)) {
-      let pos = start + 1
-      while (isAlpha(input.get(pos))) pos++
-      token.accept(Unit, pos)
+      do { input.advance() } while (isAlpha(input.next))
+      input.acceptToken(Unit)
     }
   }
 })
