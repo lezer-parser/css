@@ -1,7 +1,7 @@
 /* Hand-written tokenizers for CSS tokens that can't be
    expressed by Lezer's built-in tokenizer. */
 
-import {ExternalTokenizer} from "lezer"
+import {ExternalTokenizer} from "@lezer/lr"
 import {callee, identifier, descendantOp, Unit} from "./parser.terms.js"
 
 const space = [9, 10, 11, 12, 13, 32, 133, 160, 5760, 8192, 8193, 8194, 8195, 8196, 8197,
