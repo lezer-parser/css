@@ -67,8 +67,8 @@ selector {
   PseudoClassSelector {
     selector? !attribute (":" | "::") (
       PseudoClassName { identifier } |
-      @specialize[@name=not]<callee, "not"> ArgList<selector> |
-      PseudoClassName { callee } ArgList<value+>) } |
+      @specialize[@name=PseudoClassName]<callee, "lang" | "nth-child" | "nth-last-child" | "nth-of-type" | "dir"> ArgList<value+> |
+      PseudoClassName { callee } ArgList<selector>) } |
   IdSelector { selector? !attribute "#" IdName { identifier } } |
   AttributeSelector { selector? !attribute "[" AttributeName { identifier } (MatchOp value)? "]" } |
   ChildSelector { selector !structure ChildOp selector } |
