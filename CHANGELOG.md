@@ -1,3 +1,9 @@
+## 0.15.1 (2021-08-31)
+
+### Bug fixes
+
+Fix parsing of selector arguments to pseudo selectors.
+
 ## 0.15.0 (2021-08-11)
 
 ### Breaking changes
