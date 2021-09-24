@@ -129,3 +129,16 @@ a { foo: 2
 ==>
 
 StyleSheet(RuleSet(TagSelector(TagName),Block(Declaration(PropertyName,NumberLiteral),⚠)))
+
+# Variable names
+
+foo {
+  --my-variable: white;
+  color: var(--my-variable);
+}
+
+==>
+
+StyleSheet(RuleSet(TagSelector(TagName),Block(
+  Declaration(VariableName,ValueName),
+  Declaration(PropertyName,CallExpression(Callee,ArgList(VariableName))))))

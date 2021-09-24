@@ -83,7 +83,8 @@ NumberLiteral {
 ArgList<content> { "(" commaSep<content> ")" }
 
 Declaration {
-  PropertyName { identifier ~item } ":" value (","? value)* Important?
+  (PropertyName { identifier ~item } | VariableName)
+  ":" value (","? value)* Important?
 }
 
 query {
@@ -96,6 +97,7 @@ query {
 }
 
 value {
+  VariableName |
   ValueName { identifier } |
   ParenthesizedValue { "(" value ")" } |
   ColorLiteral |
@@ -129,7 +131,8 @@ kw<term> { @specialize[@name={term}]<identifier, term> }
 
 @external tokens identifiers from "./tokens" {
   callee,
-  identifier
+  identifier,
+  VariableName
 }
 
 @tokens {

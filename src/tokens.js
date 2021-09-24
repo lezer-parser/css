@@ -2,7 +2,7 @@
    expressed by Lezer's built-in tokenizer. */
 
 import {ExternalTokenizer} from "@lezer/lr"
-import {callee, identifier, descendantOp, Unit} from "./parser.terms.js"
+import {callee, identifier, VariableName, descendantOp, Unit} from "./parser.terms.js"
 
 const space = [9, 10, 11, 12, 13, 32, 133, 160, 5760, 8192, 8193, 8194, 8195, 8196, 8197,
                8198, 8199, 8200, 8201, 8202, 8232, 8233, 8239, 8287, 12288]
@@ -13,15 +13,16 @@ function isAlpha(ch) { return ch >= 65 && ch <= 90 || ch >= 97 && ch <= 122 || c
 
 function isDigit(ch) { return ch >= 48 && ch <= 57 }
 
-export const identifiers = new ExternalTokenizer(input => {
-  for (let inside = false, i = 0;; i++) {
+export const identifiers = new ExternalTokenizer((input, stack) => {
+  for (let inside = false, dashes = 0, i = 0;; i++) {
     let {next} = input
     if (isAlpha(next) || next == dash || next == underscore || (inside && isDigit(next))) {
       if (!inside && (next != dash || i > 0)) inside = true
+      if (dashes === i && next == dash) dashes++
       input.advance()
     } else {
       if (inside)
-        input.acceptToken(next == parenL ? callee : identifier)
+        input.acceptToken(next == parenL ? callee : dashes == 2 && stack.canShift(VariableName) ? VariableName : identifier)
       break
     }
   }
