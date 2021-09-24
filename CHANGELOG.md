@@ -1,3 +1,11 @@
+## 0.15.2 (2021-09-24)
+
+### Bug fixes
+
+Distinguish between variable names and other names.
+
+Fix the name of nodes for the `selector` keyword (which by accident was `callee` before).
+
 ## 0.15.1 (2021-08-31)
 
 ### Bug fixes
