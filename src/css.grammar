@@ -93,7 +93,7 @@ query {
   BinaryQuery { query !valueOp LogicOp query } |
   UnaryQuery { @specialize[@name=UnaryQueryOp]<identifier, "not" | "only"> query } |
   ParenthesizedQuery { "(" query ")" } |
-  SelectorQuery { @specialize[@name=callee]<callee, "selector"> "(" selector ")" }
+  SelectorQuery { @specialize[@name=selector]<callee, "selector"> "(" selector ")" }
 }
 
 value {
