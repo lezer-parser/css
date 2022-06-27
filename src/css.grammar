@@ -140,7 +140,7 @@ kw<term> { @specialize[@name={term}]<identifier, term> }
 
   NestingSelector { "&" }
 
-  AtKeyword { "@" std.asciiLetter (std.asciiLetter | std.digit | "-")* }
+  AtKeyword { "@" @asciiLetter (@asciiLetter | @digit | "-")* }
 
   MatchOp { $[~^|*$]? "=" }
 
@@ -154,7 +154,7 @@ kw<term> { @specialize[@name={term}]<identifier, term> }
 
   Important { "!important" }
 
-  whitespace { std.whitespace+ }
+  whitespace { @whitespace+ }
 
   Comment { "/*" commentRest }
 
@@ -164,7 +164,7 @@ kw<term> { @specialize[@name={term}]<identifier, term> }
 
   @precedence { Comment, BinOp }
 
-  hexDigit { std.digit | $[a-fA-F] }
+  hexDigit { @digit | $[a-fA-F] }
 
   ParenthesizedContent { !['")] ![)]+ }
 
@@ -174,7 +174,7 @@ kw<term> { @specialize[@name={term}]<identifier, term> }
     "#" hexDigit hexDigit hexDigit (hexDigit (hexDigit hexDigit (hexDigit hexDigit)?)?)?
   }
 
-  numberLiteralInner { ("+" | "-")? (std.digit+ ("." std.digit*)? | "." std.digit+) (("e" | "E") ("+" | "-")? std.digit+)? }
+  numberLiteralInner { ("+" | "-")? (@digit+ ("." @digit*)? | "." @digit+) (("e" | "E") ("+" | "-")? @digit+)? }
 
   @precedence { numberLiteralInner, BinOp, SiblingOp }
 
