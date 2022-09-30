@@ -67,7 +67,7 @@ selector {
   PseudoClassSelector {
     selector? !attribute (":" | "::") (
       PseudoClassName { identifier } |
-      @specialize[@name=PseudoClassName]<callee, "lang" | "nth-child" | "nth-last-child" | "nth-of-type" | "dir"> ArgList<value+> |
+      @specialize[@name=PseudoClassName]<callee, "dir" | "host" | "host-context" | "is" | "lang" | "not" | "nth-child" | "nth-last-child" | "nth-last-of-type" | "nth-of-type" | "where"> ArgList<value+> |
       PseudoClassName { callee } ArgList<selector>) } |
   IdSelector { selector? !attribute "#" IdName { identifier } } |
   AttributeSelector { selector? !attribute "[" AttributeName { identifier } (MatchOp value)? "]" } |
