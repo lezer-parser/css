@@ -68,7 +68,8 @@ selector {
     selector? !attribute (":" | "::") (
       PseudoClassName { identifier } |
       pseudoClassWithArg ArgList<value+> |
-      PseudoClassName { callee } ArgList<selector>) } |
+      PseudoClassName { callee } ArgList<selector>)
+  } |
   IdSelector { selector? !attribute "#" IdName { identifier } } |
   AttributeSelector { selector? !attribute "[" AttributeName { identifier } (MatchOp value)? "]" } |
   ChildSelector { selector !structure ChildOp selector } |
@@ -95,7 +96,7 @@ query {
   KeywordQuery { identifier } |
   FeatureQuery { "(" FeatureName { identifier } ":" value+ ")" } |
   BinaryQuery { query !valueOp LogicOp query } |
-  UnaryQuery { @specialize[@name=UnaryQueryOp]<identifier, "not" | "only" | "is" | "where"> query } |
+  UnaryQuery { @specialize[@name=UnaryQueryOp]<identifier, "not" | "only"> query } |
   ParenthesizedQuery { "(" query ")" } |
   SelectorQuery { @specialize[@name=selector]<callee, "selector"> "(" selector ")" }
 }
