@@ -1,3 +1,11 @@
+## 1.0.1 (2022-10-10)
+
+### Bug fixes
+
+Add support for the `is`, `where`, `host-context`, `nth-last-of-type`, and `nth-of-type` pseudo classes.
+
+Apply a consistent highlighting tag (`definitionKeyword`) to all @ keywords.
+
 ## 1.0.0 (2022-06-06)
 
 ### New features
