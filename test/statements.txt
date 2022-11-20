@@ -1,3 +1,11 @@
+# Empty stylesheets
+
+/* Just a comment */
+
+==>
+
+StyleSheet(Comment)
+
 # Import statements
 
 @import url("fineprint.css") print;
