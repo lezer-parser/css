@@ -8,6 +8,8 @@
 
 @top StyleSheet { item* }
 
+@top Styles { Declaration (";" Declaration?)* }
+
 item {
   RuleSet |
   ImportStatement |
