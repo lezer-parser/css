@@ -1,3 +1,13 @@
+## 1.1.0 (2022-11-25)
+
+### Bug fixes
+
+Don't emit an error node when the input is empty. Export a Styles top-level rule for parsing lists of properties
+
+### New features
+
+The new `Styles` top-level rule can be used to parse semicolon-separated lists of properties.
+
 ## 1.0.1 (2022-10-10)
 
 ### Bug fixes
