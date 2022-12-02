@@ -8,7 +8,7 @@
 
 @top StyleSheet { item* }
 
-@top Styles { Declaration (";" Declaration?)* }
+@top Styles { blockContent }
 
 item {
   RuleSet |
@@ -59,7 +59,9 @@ SupportsStatement {
 
 AtRule { AtKeyword commaSep<query> (";" | Block) }
 
-Block { "{" ~item item* (Declaration (";" ~item item* Declaration?)*)? "}" }
+Block { "{" blockContent "}" }
+
+blockContent { ~item item* (Declaration (";" ~item item* Declaration?)*)? }
 
 selector {
   UniversalSelector |
