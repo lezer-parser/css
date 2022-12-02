@@ -1,3 +1,9 @@
+## 1.1.1 (2022-12-02)
+
+### Bug fixes
+
+The `Styles` top rule now also recognizes nested rules.
+
 ## 1.1.0 (2022-11-25)
 
 ### Bug fixes
