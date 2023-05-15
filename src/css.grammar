@@ -49,8 +49,16 @@ KeyframesStatement {
   KeyframeList
 }
 
+timelineRangeName {
+  kw<"cover"> | kw<"contain"> | kw<"entry"> | kw<"exit"> | kw<"entry-crossing"> | kw<"exit-crossing">
+}
+
+keyframeSelector {
+  kw<"from"> | kw<"to"> | NumberLiteral | timelineRangeName NumberLiteral
+}
+
 KeyframeList {
-  "{" ((kw<"from"> | kw<"to"> | NumberLiteral) Block)* "}"
+  "{" (keyframeSelector ("," keyframeSelector)* Block)* "}"
 }
 
 SupportsStatement {

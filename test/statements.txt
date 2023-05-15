@@ -63,6 +63,51 @@ StyleSheet(KeyframesStatement(keyframes,KeyframeName,KeyframeList(
   Comment,
   to,Block(Declaration(PropertyName,NumberLiteral(Unit))))))
 
+# Multiple keyframe selectors
+
+@keyframes anim-1 {
+  0% { margin-top: 0px; }
+  25%, 50%  { margin-top: 50px; }
+  40% { margin-top: 25px; }
+}
+
+==>
+
+StyleSheet(KeyframesStatement(keyframes,KeyframeName,KeyframeList(
+  NumberLiteral(Unit),Block(Declaration(PropertyName,NumberLiteral(Unit))),
+  NumberLiteral(Unit), NumberLiteral(Unit), Block(Declaration(PropertyName,NumberLiteral(Unit))),
+  NumberLiteral(Unit),Block(Declaration(PropertyName,NumberLiteral(Unit))))))
+
+# Keyframes statements with range
+
+@keyframes anim-1 {
+  entry 0%  { margin-top: 50px; }
+  entry 100%  { margin-top: 50px; }
+  exit 0% { margin-top: 50px; }
+  exit 100% { margin-top: 50px; }
+}
+
+==>
+
+StyleSheet(KeyframesStatement(keyframes,KeyframeName,KeyframeList(
+  entry, NumberLiteral(Unit),Block(Declaration(PropertyName,NumberLiteral(Unit))),
+  entry, NumberLiteral(Unit),Block(Declaration(PropertyName,NumberLiteral(Unit))),
+  exit, NumberLiteral(Unit),Block(Declaration(PropertyName,NumberLiteral(Unit))),
+  exit, NumberLiteral(Unit),Block(Declaration(PropertyName,NumberLiteral(Unit))))))
+
+# Keyframes statements with range and multiple keyframe selectors
+
+@keyframes fade-in-out-animation {
+  entry 0%, exit 100% { opacity: 0 }
+  entry 100%, exit 0% { opacity: 1 }
+}
+
+==>
+
+StyleSheet(KeyframesStatement(keyframes,KeyframeName,KeyframeList(
+  entry, NumberLiteral(Unit), exit, NumberLiteral(Unit), Block(Declaration(PropertyName,NumberLiteral)),
+  entry, NumberLiteral(Unit), exit, NumberLiteral(Unit), Block(Declaration(PropertyName,NumberLiteral)))))
+
 # Media statements
 
 @media screen and (min-width: 30em) and (orientation: landscape) {}
