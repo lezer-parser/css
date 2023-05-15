@@ -5,6 +5,7 @@ export const cssHighlighting = styleTags({
   "from to selector": t.keyword,
   NamespaceName: t.namespace,
   KeyframeName: t.labelName,
+  KeyframeRangeName: t.operatorKeyword,
   TagName: t.tagName,
   ClassName: t.className,
   PseudoClassName: t.constant(t.className),

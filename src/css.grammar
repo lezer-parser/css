@@ -45,12 +45,17 @@ NamespaceStatement {
 
 KeyframesStatement {
   @specialize[@name=keyframes]<AtKeyword, "@keyframes">
-  KeyframeName { identifier }
+  KeyframeName { identifier | StringLiteral }
   KeyframeList
 }
 
+KeyframeSelector {
+  KeyframeRangeName { identifier } NumberLiteral? |
+  NumberLiteral
+}
+
 KeyframeList {
-  "{" ((kw<"from"> | kw<"to"> | NumberLiteral) Block)* "}"
+  "{" (KeyframeSelector ("," KeyframeSelector)* Block)* "}"
 }
 
 SupportsStatement {
@@ -127,8 +132,6 @@ CallExpression {
 }
 
 commaSep<value> { "" | value ("," value)* }
-
-kw<term> { @specialize[@name={term}]<identifier, term> }
 
 @external tokens descendant from "./tokens" {
   descendantOp

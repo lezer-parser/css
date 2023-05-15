@@ -51,17 +51,50 @@ StyleSheet(
 
 @keyframes important1 {
   from { margin-top: 50px; }
-  50%  { margin-top: 150px !important; } /* ignored */
+  50%, 60%  { margin-top: 150px !important; } /* ignored */
   to   { margin-top: 100px; }
 }
 
 ==>
 
 StyleSheet(KeyframesStatement(keyframes,KeyframeName,KeyframeList(
-  from,Block(Declaration(PropertyName,NumberLiteral(Unit))),
-  NumberLiteral(Unit),Block(Declaration(PropertyName,NumberLiteral(Unit),Important)),
+  KeyframeSelector(KeyframeRangeName),Block(Declaration(PropertyName,NumberLiteral(Unit))),
+  KeyframeSelector(NumberLiteral(Unit)),KeyframeSelector(NumberLiteral(Unit)),Block(
+    Declaration(PropertyName,NumberLiteral(Unit),Important)),
   Comment,
-  to,Block(Declaration(PropertyName,NumberLiteral(Unit))))))
+  KeyframeSelector(KeyframeRangeName),Block(Declaration(PropertyName,NumberLiteral(Unit))))))
+
+# Keyframes statements with range
+
+@keyframes anim-1 {
+  entry 0%  { margin-top: 50px; }
+  entry 100%  { margin-top: 50px; }
+  exit 0% { margin-top: 50px; }
+  exit 100% { margin-top: 50px; }
+}
+
+==>
+
+StyleSheet(KeyframesStatement(keyframes,KeyframeName,KeyframeList(
+  KeyframeSelector(KeyframeRangeName,NumberLiteral(Unit)),Block(Declaration(PropertyName,NumberLiteral(Unit))),
+  KeyframeSelector(KeyframeRangeName,NumberLiteral(Unit)),Block(Declaration(PropertyName,NumberLiteral(Unit))),
+  KeyframeSelector(KeyframeRangeName,NumberLiteral(Unit)),Block(Declaration(PropertyName,NumberLiteral(Unit))),
+  KeyframeSelector(KeyframeRangeName,NumberLiteral(Unit)),Block(Declaration(PropertyName,NumberLiteral(Unit))))))
+
+# Keyframes statements with range and multiple keyframe selectors
+
+@keyframes fade-in-out-animation {
+  entry 0%, exit 100% { opacity: 0 }
+  entry 100%, exit 0% { opacity: 1 }
+}
+
+==>
+
+StyleSheet(KeyframesStatement(keyframes,KeyframeName,KeyframeList(
+  KeyframeSelector(KeyframeRangeName,NumberLiteral(Unit)),KeyframeSelector(KeyframeRangeName,NumberLiteral(Unit)),Block(
+    Declaration(PropertyName,NumberLiteral)),
+  KeyframeSelector(KeyframeRangeName,NumberLiteral(Unit)),KeyframeSelector(KeyframeRangeName,NumberLiteral(Unit)),Block(
+    Declaration(PropertyName,NumberLiteral)))))
 
 # Media statements
 
@@ -95,7 +128,7 @@ StyleSheet(
   SupportsStatement(supports,BinaryQuery(FeatureQuery(FeatureName,ValueName),LogicOp,FeatureQuery(FeatureName,ValueName)),Block),
   SupportsStatement(supports,UnaryQuery(UnaryQueryOp,ParenthesizedQuery(
     BinaryQuery(FeatureQuery(FeatureName,ValueName),LogicOp,FeatureQuery(FeatureName,ValueName)))),Block),
-  SupportsStatement(supports,UnaryQuery(UnaryQueryOp,SelectorQuery(selector,PseudoClassSelector(":",PseudoClassName,ArgList(TagSelector(TagName),TagSelector(TagName))))),Block))
+  SupportsStatement(supports,UnaryQuery(UnaryQueryOp,SelectorQuery(selector,PseudoClassSelector(PseudoClassName,ArgList(TagSelector(TagName),TagSelector(TagName))))),Block))
 
 # Charset statements
 
