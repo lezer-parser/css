@@ -1,3 +1,11 @@
+## 1.1.2 (2023-05-15)
+
+### Bug fixes
+
+Make keyframe selector parsing more flexible to support timeline ranges.
+
+Allow multiple comma-separated keyframe selectors per keyframe.
+
 ## 1.1.1 (2022-12-02)
 
 ### Bug fixes
