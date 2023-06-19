@@ -151,3 +151,13 @@ StyleSheet(AtRule(AtKeyword,Block(
   Declaration(PropertyName,StringLiteral),
   Declaration(PropertyName,CallLiteral(CallTag,StringLiteral),CallExpression(Callee,ArgList(StringLiteral)),
     CallLiteral(CallTag,StringLiteral),CallExpression(Callee,ArgList(StringLiteral))))))
+
+# Unterminated Comment
+
+p {}
+/*
+div {}
+
+==>
+
+StyleSheet(RuleSet(TagSelector(TagName),Block),Comment)

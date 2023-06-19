@@ -131,6 +131,16 @@ CallExpression {
   Callee { callee } ArgList<value+>
 }
 
+@skip {} {
+  Comment { "/*" (commentContent | commentLineBreak)* commentEnd }
+}
+
+@local tokens {
+  commentEnd { "*/" | @eof }
+  commentLineBreak { "\n" }
+  @else commentContent
+}
+
 commaSep<value> { "" | value ("," value)* }
 
 @external tokens descendant from "./tokens" {
@@ -168,19 +178,11 @@ commaSep<value> { "" | value ("," value)* }
 
   whitespace { @whitespace+ }
 
-  Comment { "/*" commentRest }
-
-  commentRest { ![*] commentRest | "*" commentAfterStar }
-
-  commentAfterStar { "/" | "*" commentAfterStar | ![/*] commentRest }
-
-  @precedence { Comment, BinOp }
-
   hexDigit { @digit | $[a-fA-F] }
 
   ParenthesizedContent { !['")] ![)]+ }
 
-  @precedence { whitespace, ParenthesizedContent, Comment }
+  @precedence { whitespace, ParenthesizedContent, "/*" }
 
   ColorLiteral {
     "#" hexDigit hexDigit hexDigit (hexDigit (hexDigit hexDigit (hexDigit hexDigit)?)?)?
