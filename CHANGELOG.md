@@ -1,3 +1,11 @@
+## 1.1.3 (2023-07-03)
+
+### Bug fixes
+
+Comments are now parsed to end of file if no closing `*/` is found.
+
+Make the package work with new TS resolution styles.
+
 ## 1.1.2 (2023-05-15)
 
 ### Bug fixes
