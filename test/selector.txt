@@ -97,6 +97,7 @@ StyleSheet(
 a {
   &.b {}
   & c {}
+  c & {}
   & > d {}
 }
 
@@ -105,6 +106,7 @@ a {
 StyleSheet(RuleSet(TagSelector(TagName),Block(
   RuleSet(ClassSelector(NestingSelector,ClassName),Block),
   RuleSet(DescendantSelector(NestingSelector,TagSelector(TagName)),Block),
+  RuleSet(DescendantSelector(TagSelector(TagName), NestingSelector),Block),
   RuleSet(ChildSelector(NestingSelector,ChildOp,TagSelector(TagName)),Block))))
 
 # Sibling selectors
