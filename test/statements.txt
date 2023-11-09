@@ -161,3 +161,15 @@ div {}
 ==>
 
 StyleSheet(RuleSet(TagSelector(TagName),Block),Comment)
+
+# Escaped identifiers
+
+#foo\ bar {
+  --weird\\var: 5px;
+  width: var(--weird\\var);
+}
+==>
+
+StyleSheet(RuleSet(IdSelector(IdName),Block(
+  Declaration(VariableName,NumberLiteral(Unit)),
+  Declaration(PropertyName,CallExpression(Callee,ArgList(VariableName))))))

@@ -7,7 +7,7 @@ import {callee, identifier, VariableName, descendantOp, Unit} from "./parser.ter
 const space = [9, 10, 11, 12, 13, 32, 133, 160, 5760, 8192, 8193, 8194, 8195, 8196, 8197,
                8198, 8199, 8200, 8201, 8202, 8232, 8233, 8239, 8287, 12288]
 const colon = 58, parenL = 40, underscore = 95, bracketL = 91, dash = 45, period = 46,
-      hash = 35, percent = 37, ampersand = 38
+      hash = 35, percent = 37, ampersand = 38, backslash = 92, newline = 10
 
 function isAlpha(ch) { return ch >= 65 && ch <= 90 || ch >= 97 && ch <= 122 || ch >= 161 }
 
@@ -20,6 +20,10 @@ export const identifiers = new ExternalTokenizer((input, stack) => {
       if (!inside && (next != dash || i > 0)) inside = true
       if (dashes === i && next == dash) dashes++
       input.advance()
+    } else if (next == backslash && input.peek(1) != newline) {
+      input.advance()
+      if (input.next > -1) input.advance()
+      inside = true
     } else {
       if (inside)
         input.acceptToken(next == parenL ? callee : dashes == 2 && stack.canShift(VariableName) ? VariableName : identifier)
