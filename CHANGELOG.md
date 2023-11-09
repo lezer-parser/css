@@ -1,3 +1,11 @@
+## 1.1.4 (2023-11-09)
+
+### Bug fixes
+
+Fix parsing of `&` selectors in descendant selectors.
+
+Allow identifiers to contain backslash escapes.
+
 ## 1.1.3 (2023-07-03)
 
 ### Bug fixes
