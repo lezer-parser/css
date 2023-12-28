@@ -132,7 +132,7 @@ CallExpression {
 }
 
 @skip {} {
-  Comment { "/*" (commentContent | commentLineBreak)* commentEnd }
+  Comment[isolate] { "/*" (commentContent | commentLineBreak)* commentEnd }
 }
 
 @local tokens {
@@ -192,7 +192,7 @@ commaSep<value> { "" | value ("," value)* }
 
   @precedence { numberLiteralInner, BinOp, SiblingOp }
 
-  StringLiteral { "\"" (!["\n\\] | "\\" _)* "\"" | "'" (!['\n\\] | "\\" _)* "'" }
+  StringLiteral[isolate] { "\"" (!["\n\\] | "\\" _)* "\"" | "'" (!['\n\\] | "\\" _)* "'" }
 
   "#"
 
