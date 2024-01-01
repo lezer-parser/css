@@ -119,7 +119,8 @@ value {
   StringLiteral |
   BinaryExpression { value !valueOp BinOp value } |
   CallExpression |
-  CallLiteral
+  CallLiteral |
+  LineNames { "[" LineName { identifier }* "]" }
 }
 
 CallLiteral {
