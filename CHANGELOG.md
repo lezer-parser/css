@@ -1,3 +1,9 @@
+## 1.1.6 (2024-01-01)
+
+### Bug fixes
+
+Add support for bracketed grid line names.
+
 ## 1.1.5 (2023-12-28)
 
 ### Bug fixes
