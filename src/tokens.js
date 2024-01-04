@@ -36,7 +36,8 @@ export const descendant = new ExternalTokenizer(input => {
   if (space.includes(input.peek(-1))) {
     let {next} = input
     if (isAlpha(next) || next == underscore || next == hash || next == period ||
-        next == bracketL || next == colon || next == dash || next == ampersand)
+        next == bracketL || next == colon && isAlpha(input.peek(1)) ||
+        next == dash || next == ampersand)
       input.acceptToken(descendantOp)
   }
 })

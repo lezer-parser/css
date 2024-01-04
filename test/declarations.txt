@@ -142,3 +142,19 @@ foo {
 StyleSheet(RuleSet(TagSelector(TagName),Block(
   Declaration(VariableName,ValueName),
   Declaration(PropertyName,CallExpression(Callee,ArgList(VariableName))))))
+
+# Space before colon
+
+div {
+  color : red;
+  .x :active {
+    color : blue;
+  }
+}
+
+==>
+
+StyleSheet(RuleSet(TagSelector(TagName),Block(
+  Declaration(PropertyName,ValueName),
+  RuleSet(DescendantSelector(ClassSelector(ClassName),PseudoClassSelector(PseudoClassName)),Block(
+    Declaration(PropertyName,ValueName))))))
