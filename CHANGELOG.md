@@ -1,3 +1,9 @@
+## 1.1.7 (2024-01-08)
+
+### Bug fixes
+
+Correctly parse properties with a space before the colon.
+
 ## 1.1.6 (2024-01-01)
 
 ### Bug fixes
