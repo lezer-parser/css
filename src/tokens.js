@@ -47,7 +47,7 @@ export const unitToken = new ExternalTokenizer(input => {
     let {next} = input
     if (next == percent) { input.advance(); input.acceptToken(Unit) }
     if (isAlpha(next)) {
-      do { input.advance() } while (isAlpha(input.next))
+      do { input.advance() } while (isAlpha(input.next) || isDigit(input.next))
       input.acceptToken(Unit)
     }
   }
