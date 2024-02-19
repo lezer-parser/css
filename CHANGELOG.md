@@ -1,3 +1,9 @@
+## 1.1.8 (2024-02-19)
+
+### Bug fixes
+
+Follow the standard, allowing digits in unit identifiers.
+
 ## 1.1.7 (2024-01-08)
 
 ### Bug fixes
