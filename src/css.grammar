@@ -125,7 +125,7 @@ value {
 
 CallLiteral {
   @specialize[@name=CallTag]<callee, "url" | "url-prefix" | "domain" | "regexp">
-  "(" (ParenthesizedContent | StringLiteral) ")"
+  "(" (ParenthesizedContent | StringLiteral)? ")"
 }
 
 CallExpression {

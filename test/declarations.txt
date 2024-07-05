@@ -93,11 +93,14 @@ StyleSheet(RuleSet(TagSelector(TagName),Block(Declaration(PropertyName,StringLit
 
 a {
   b: url(http://something-else?foo=bar);
+  c: url();
 }
 
 ==>
 
-StyleSheet(RuleSet(TagSelector(TagName),Block(Declaration(PropertyName,CallLiteral(CallTag,ParenthesizedContent)))))
+StyleSheet(RuleSet(TagSelector(TagName),Block(
+  Declaration(PropertyName,CallLiteral(CallTag,ParenthesizedContent)),
+  Declaration(PropertyName,CallLiteral(CallTag)))))
 
 # Important declarations
 
