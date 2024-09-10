@@ -98,7 +98,7 @@ ArgList<content> { "(" commaSep<content> ")" }
 
 Declaration {
   (PropertyName { identifier ~item } | VariableName)
-  ":" value (","? value)* Important?
+  ":" (value (","? value)*)? Important?
 }
 
 query {
