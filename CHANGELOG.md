@@ -1,3 +1,11 @@
+## 1.1.9 (2024-09-10)
+
+### Bug fixes
+
+Allow `url()` values to be empty.
+
+Don't generate a parse error when declarations don't have a value.
+
 ## 1.1.8 (2024-02-19)
 
 ### Bug fixes
