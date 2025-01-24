@@ -1,3 +1,9 @@
+## 1.1.10 (2025-01-24)
+
+### Bug fixes
+
+Emit a node for class selector dots.
+
 ## 1.1.9 (2024-09-10)
 
 ### Bug fixes
