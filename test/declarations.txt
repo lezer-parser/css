@@ -146,6 +146,15 @@ StyleSheet(RuleSet(TagSelector(TagName),Block(
   Declaration(VariableName,ValueName),
   Declaration(PropertyName,CallExpression(Callee,ArgList(VariableName))))))
 
+# Trailing comma
+
+div { color: var(--c,) }
+
+==>
+
+StyleSheet(RuleSet(TagSelector(TagName),Block(
+  Declaration(PropertyName,CallExpression(Callee,ArgList(VariableName))))))
+
 # Space before colon
 
 div {

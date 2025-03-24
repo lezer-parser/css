@@ -142,7 +142,7 @@ CallExpression {
   @else commentContent
 }
 
-commaSep<value> { "" | value ("," value)* }
+commaSep<value> { "" | value ("," value?)* }
 
 @external tokens descendant from "./tokens" {
   descendantOp
