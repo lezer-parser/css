@@ -1,3 +1,9 @@
+## 1.1.11 (2025-03-24)
+
+### Bug fixes
+
+Accept trailing commas in argument lists.
+
 ## 1.1.10 (2025-01-24)
 
 ### Bug fixes
