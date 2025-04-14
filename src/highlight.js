@@ -20,7 +20,7 @@ export const cssHighlighting = styleTags({
   Callee: t.operatorKeyword,
   Unit: t.unit,
   "UniversalSelector NestingSelector": t.definitionOperator,
-  MatchOp: t.compareOperator,
+  "MatchOp RangeOp": t.compareOperator,
   "ChildOp SiblingOp, LogicOp": t.logicOperator,
   BinOp: t.arithmeticOperator,
   Important: t.modifier,

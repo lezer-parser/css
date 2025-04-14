@@ -107,7 +107,15 @@ query {
   BinaryQuery { query !valueOp LogicOp query } |
   UnaryQuery { @specialize[@name=UnaryQueryOp]<identifier, "not" | "only"> query } |
   ParenthesizedQuery { "(" query ")" } |
-  SelectorQuery { @specialize[@name=selector]<callee, "selector"> "(" selector ")" }
+  SelectorQuery { @specialize[@name=selector]<callee, "selector"> "(" selector ")" } |
+  RangeQuery {
+    "(" 
+    (FeatureName { identifier } | NumberLiteral) !valueOp 
+    RangeOp
+    (FeatureName { identifier } | NumberLiteral)
+    (RangeOp (FeatureName { identifier } | NumberLiteral))?
+    ")"
+  }
 }
 
 value {
@@ -172,6 +180,8 @@ commaSep<value> { "" | value ("," value?)* }
   SiblingOp { "~" | "+" }
 
   LogicOp { "and" | "or" }
+
+  RangeOp { ">=" | ">" | "<" | "<="}
 
   BinOp { $[+\-*/] }
 
