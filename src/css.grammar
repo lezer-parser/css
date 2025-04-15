@@ -81,9 +81,9 @@ selector {
   } |
   IdSelector { selector? !attribute "#" IdName { identifier } } |
   AttributeSelector { selector? !attribute "[" AttributeName { identifier } (MatchOp value)? "]" } |
-  ChildSelector { selector !structure ChildOp selector } |
+  ChildSelector { selector? !structure ChildOp selector } |
   DescendantSelector { selector !structure descendantOp selector } |
-  SiblingSelector { selector !structure SiblingOp selector }
+  SiblingSelector { selector? !structure SiblingOp selector }
 }
 
 pseudoClassWithArg {

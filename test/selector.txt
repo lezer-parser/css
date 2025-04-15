@@ -109,6 +109,21 @@ StyleSheet(RuleSet(TagSelector(TagName),Block(
   RuleSet(DescendantSelector(TagSelector(TagName), NestingSelector),Block),
   RuleSet(ChildSelector(NestingSelector,ChildOp,TagSelector(TagName)),Block))))
 
+# Relative selectors
+
+a {
+  p {}
+  > f {}
+  + g {}
+}
+
+==>
+
+StyleSheet(RuleSet(TagSelector(TagName),Block(
+  RuleSet(TagSelector(TagName),Block),
+  RuleSet(ChildSelector(ChildOp,TagSelector(TagName)),Block),
+  RuleSet(SiblingSelector(SiblingOp,TagSelector(TagName)),Block))))
+
 # Sibling selectors
 
 a.b ~ c.d {}
