@@ -13,6 +13,9 @@ StyleSheet(Comment)
 @import 'custom.css';
 @import url("chrome://communicator/skin/");
 @import "common.css" screen;
+@import "reset.css" layer(base);
+@import "components.css" layer screen;
+@import url("gridy.css") supports(display: grid) screen;
 
 ==>
 
@@ -21,7 +24,10 @@ StyleSheet(
   ImportStatement(import,CallLiteral(CallTag,StringLiteral),KeywordQuery),
   ImportStatement(import,StringLiteral),
   ImportStatement(import,CallLiteral(CallTag,StringLiteral)),
-  ImportStatement(import,StringLiteral,KeywordQuery))
+  ImportStatement(import,StringLiteral,KeywordQuery)
+  ImportStatement(import,StringLiteral,Layer(layer)),
+  ImportStatement(import,StringLiteral,Layer(layer),KeywordQuery),
+  ImportStatement(import,CallLiteral(CallTag,StringLiteral),Supports(supports,FeatureQuery(FeatureName,ValueName)),KeywordQuery))
 
 # Namespace statements
 
@@ -109,7 +115,7 @@ StyleSheet(
   MediaStatement(media,BinaryQuery(BinaryQuery(KeywordQuery,LogicOp,FeatureQuery(FeatureName,NumberLiteral(Unit))),LogicOp,
     FeatureQuery(FeatureName,ValueName)),Block),
   MediaStatement(media,FeatureQuery(FeatureName,NumberLiteral(Unit)),BinaryQuery(KeywordQuery,LogicOp,FeatureQuery(FeatureName,ValueName)),Block),
-  MediaStatement(media,UnaryQuery(UnaryQueryOp,BinaryQuery(KeywordQuery,LogicOp,ParenthesizedQuery(KeywordQuery))),Block),
+  MediaStatement(media,BinaryQuery(UnaryQuery(UnaryQueryOp,KeywordQuery),LogicOp,ParenthesizedQuery(KeywordQuery)),Block),
   MediaStatement(media,UnaryQuery(UnaryQueryOp,KeywordQuery),Block))
 
 # Supports statements

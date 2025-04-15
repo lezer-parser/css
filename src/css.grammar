@@ -26,7 +26,13 @@ RuleSet {
 }
 
 ImportStatement {
-  @specialize[@name=import]<AtKeyword, "@import"> value commaSep<query> ";"
+  @specialize[@name=import]<AtKeyword, "@import"> value
+  Layer { 
+    @specialize[@name=layer]<identifier, "layer"> |
+    @specialize[@name=layer]<callee, "layer">  ("(" identifier ")")
+  }?
+  Supports { @specialize[@name=supports]<callee, "supports"> query }?
+  commaSep<query> ";"
 }
 
 MediaStatement {
