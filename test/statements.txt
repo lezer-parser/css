@@ -102,6 +102,7 @@ StyleSheet(KeyframesStatement(keyframes,KeyframeName,KeyframeList(
 @media (min-height: 680px), screen and (orientation: portrait) {}
 @media not all and (monochrome) {}
 @media only screen {}
+@media (10em <= width < 30em) {}
 
 ==>
 
@@ -110,7 +111,8 @@ StyleSheet(
     FeatureQuery(FeatureName,ValueName)),Block),
   MediaStatement(media,FeatureQuery(FeatureName,NumberLiteral(Unit)),BinaryQuery(KeywordQuery,LogicOp,FeatureQuery(FeatureName,ValueName)),Block),
   MediaStatement(media,UnaryQuery(UnaryQueryOp,BinaryQuery(KeywordQuery,LogicOp,ParenthesizedQuery(KeywordQuery))),Block),
-  MediaStatement(media,UnaryQuery(UnaryQueryOp,KeywordQuery),Block))
+  MediaStatement(media,UnaryQuery(UnaryQueryOp,KeywordQuery),Block),
+  MediaStatement(media,ComparisonQuery(NumberLiteral(Unit),CompareOp,FeatureName,CompareOp,NumberLiteral(Unit)),Block))
 
 # Supports statements
 

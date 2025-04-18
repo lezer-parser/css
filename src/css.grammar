@@ -1,6 +1,7 @@
 @precedence {
   attribute @left,
   structure @left,
+  valueCompareOp,
   valueOp @left
 }
 
@@ -103,12 +104,20 @@ Declaration {
 
 query {
   KeywordQuery { identifier } |
-  FeatureQuery { "(" FeatureName { identifier } ":" value+ ")" } |
+  FeatureQuery { "(" FeatureName ":" value+ ")" } |
   BinaryQuery { query !valueOp LogicOp query } |
+  ComparisonQuery {
+    "("
+    (queryValue | FeatureName) !valueCompareOp CompareOp (queryValue | FeatureName)
+    (!valueCompareOp CompareOp (queryValue | FeatureName))?
+    ")"
+  } |
   UnaryQuery { @specialize[@name=UnaryQueryOp]<identifier, "not" | "only"> query } |
   ParenthesizedQuery { "(" query ")" } |
   SelectorQuery { @specialize[@name=selector]<callee, "selector"> "(" selector ")" }
 }
+
+FeatureName { identifier }
 
 value {
   VariableName |
@@ -121,6 +130,15 @@ value {
   CallExpression |
   CallLiteral |
   LineNames { "[" LineName { identifier }* "]" }
+}
+
+queryValue {
+  VariableName |
+  ColorLiteral |
+  NumberLiteral |
+  StringLiteral |
+  CallExpression |
+  CallLiteral
 }
 
 CallLiteral {
@@ -168,6 +186,8 @@ commaSep<value> { "" | value ("," value?)* }
   MatchOp { $[~^|*$]? "=" }
 
   ChildOp { ">" ">"? }
+
+  CompareOp { $[<>] "="? | "=" }
 
   SiblingOp { "~" | "+" }
 
