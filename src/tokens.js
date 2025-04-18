@@ -2,7 +2,7 @@
    expressed by Lezer's built-in tokenizer. */
 
 import {ExternalTokenizer} from "@lezer/lr"
-import {callee, identifier, VariableName, descendantOp, Unit} from "./parser.terms.js"
+import {callee, identifier, VariableName, queryIdentifier, descendantOp, Unit} from "./parser.terms.js"
 
 const space = [9, 10, 11, 12, 13, 32, 133, 160, 5760, 8192, 8193, 8194, 8195, 8196, 8197,
                8198, 8199, 8200, 8201, 8202, 8232, 8233, 8239, 8287, 12288]
@@ -25,8 +25,11 @@ export const identifiers = new ExternalTokenizer((input, stack) => {
       if (input.next > -1) input.advance()
       inside = true
     } else {
-      if (inside)
-        input.acceptToken(next == parenL ? callee : dashes == 2 && stack.canShift(VariableName) ? VariableName : identifier)
+      if (inside) input.acceptToken(
+        dashes == 2 && stack.canShift(VariableName) ? VariableName
+          : stack.canShift(queryIdentifier) ? queryIdentifier
+          : next == parenL ? callee
+          : identifier)
       break
     }
   }

@@ -2,7 +2,8 @@
   attribute @left,
   structure @left,
   valueCompareOp,
-  valueOp @left
+  valueOp @left,
+  layerName
 }
 
 @skip { whitespace | Comment }
@@ -27,8 +28,13 @@ RuleSet {
 }
 
 ImportStatement {
-  @specialize[@name=import]<AtKeyword, "@import"> value commaSep<query> ";"
+  @specialize[@name=import]<AtKeyword, "@import">
+  value
+  Layer { @specialize[@name=layer]<queryIdentifier, "layer"> (!layerName "(" LayerName ("." LayerName)* ")")? }?
+  commaSep<query> ";"
 }
+
+LayerName { identifier }
 
 MediaStatement {
   @specialize[@name=media]<AtKeyword, "@media"> commaSep<query> Block
@@ -103,7 +109,7 @@ Declaration {
 }
 
 query {
-  KeywordQuery { identifier } |
+  KeywordQuery { queryIdentifier } |
   FeatureQuery { "(" FeatureName ":" value+ ")" } |
   BinaryQuery { query !valueOp LogicOp query } |
   ComparisonQuery {
@@ -112,12 +118,12 @@ query {
     (!valueCompareOp CompareOp (queryValue | FeatureName))?
     ")"
   } |
-  UnaryQuery { @specialize[@name=UnaryQueryOp]<identifier, "not" | "only"> query } |
+  UnaryQuery { @specialize[@name=UnaryQueryOp]<queryIdentifier, "not" | "only"> query } |
   ParenthesizedQuery { "(" query ")" } |
-  SelectorQuery { @specialize[@name=selector]<callee, "selector"> "(" selector ")" }
+  SelectorQuery { @specialize[@name=selector]<queryIdentifier, "selector"> "(" selector ")" }
 }
 
-FeatureName { identifier }
+FeatureName { queryIdentifier }
 
 value {
   VariableName |
@@ -173,7 +179,8 @@ commaSep<value> { "" | value ("," value?)* }
 @external tokens identifiers from "./tokens" {
   callee,
   identifier,
-  VariableName
+  VariableName,
+  queryIdentifier
 }
 
 @tokens {
