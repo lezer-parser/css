@@ -188,7 +188,7 @@ commaSep<value> { "" | value ("," value?)* }
 
   NestingSelector { "&" }
 
-  AtKeyword { "@" @asciiLetter (@asciiLetter | @digit | "-")* }
+  AtKeyword { "@" "-"? @asciiLetter (@asciiLetter | @digit | "-")* }
 
   MatchOp { $[~^|*$]? "=" }
 
