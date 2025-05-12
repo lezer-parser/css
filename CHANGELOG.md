@@ -1,3 +1,19 @@
+## 1.2.0 (2025-05-12)
+
+### Bug fixes
+
+Allow @ keywords to start with a dash, since prefixed ones exist.
+
+Bump the dependency on @lezer/lr to a version that supports local token groups. Also bump @lezer/generator dependency
+
+### New features
+
+Add support for range queries.
+
+`@import` statements now support `layer` syntax.
+
+Support relative versions of the `+`, `>`, and `~` selectors, which omit the left-hand selector. Allow @-keywords to start with a dash
+
 ## 1.1.11 (2025-03-24)
 
 ### Bug fixes
