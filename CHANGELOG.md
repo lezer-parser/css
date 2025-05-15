@@ -1,3 +1,9 @@
+## 1.2.1 (2025-05-15)
+
+### Bug fixes
+
+Fix parsing of `*` selectors in descendant positions.
+
 ## 1.2.0 (2025-05-12)
 
 ### Bug fixes
