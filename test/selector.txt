@@ -1,10 +1,13 @@
 # Universal selectors
 
 * {}
+div * {}
 
 ==>
 
-StyleSheet(RuleSet(UniversalSelector,Block))
+StyleSheet(
+  RuleSet(UniversalSelector,Block),
+  RuleSet(DescendantSelector(TagSelector(TagName),UniversalSelector),Block))
 
 # Type selectors
 
