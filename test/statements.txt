@@ -134,7 +134,7 @@ StyleSheet(
   SupportsStatement(supports,BinaryQuery(FeatureQuery(FeatureName,ValueName),LogicOp,FeatureQuery(FeatureName,ValueName)),Block),
   SupportsStatement(supports,UnaryQuery(UnaryQueryOp,ParenthesizedQuery(
     BinaryQuery(FeatureQuery(FeatureName,ValueName),LogicOp,FeatureQuery(FeatureName,ValueName)))),Block),
-  SupportsStatement(supports,UnaryQuery(UnaryQueryOp,SelectorQuery(selector,PseudoClassSelector(PseudoClassName,ArgList(TagSelector(TagName),TagSelector(TagName))))),Block))
+  SupportsStatement(supports,UnaryQuery(UnaryQueryOp,SelectorQuery(selector,ParenthesizedSelector(PseudoClassSelector(PseudoClassName,ArgList(TagSelector(TagName),TagSelector(TagName)))))),Block))
 
 # Charset statements
 
@@ -179,3 +179,16 @@ StyleSheet(RuleSet(TagSelector(TagName),Block),Comment)
 StyleSheet(RuleSet(IdSelector(IdName),Block(
   Declaration(VariableName,NumberLiteral(Unit)),
   Declaration(PropertyName,CallExpression(Callee,ArgList(VariableName))))))
+
+# Scope
+
+@scope { .x {} }
+@scope (div) {}
+@scope (.a) to (.b) {}
+
+==>
+
+StyleSheet(
+  ScopeStatement(scope,Block(RuleSet(ClassSelector(ClassName),Block))),
+  ScopeStatement(scope,ParenthesizedSelector(TagSelector(TagName)),Block),
+  ScopeStatement(scope,ParenthesizedSelector(ClassSelector(ClassName)),to,ParenthesizedSelector(ClassSelector(ClassName)),Block))

@@ -20,6 +20,7 @@ item {
   NamespaceStatement |
   KeyframesStatement |
   SupportsStatement |
+  ScopeStatement |
   AtRule
 }
 
@@ -28,30 +29,30 @@ RuleSet {
 }
 
 ImportStatement {
-  @specialize[@name=import]<AtKeyword, "@import">
+  atKw<"import">
   value
-  Layer { @specialize[@name=layer]<queryIdentifier, "layer"> (!layerName "(" LayerName ("." LayerName)* ")")? }?
+  Layer { queryKw<"layer"> (!layerName "(" LayerName ("." LayerName)* ")")? }?
   commaSep<query> ";"
 }
 
 LayerName { identifier }
 
 MediaStatement {
-  @specialize[@name=media]<AtKeyword, "@media"> commaSep<query> Block
+  atKw<"media"> commaSep<query> Block
 }
 
 CharsetStatement {
-  @specialize[@name=charset]<AtKeyword, "@charset"> value ";"
+  atKw<"charset"> value ";"
 }
 
 NamespaceStatement {
-  @specialize[@name=namespace]<AtKeyword, "@namespace">
+  atKw<"namespace">
   NamespaceName { identifier }?
   (StringLiteral | CallLiteral) ";"
 }
 
 KeyframesStatement {
-  @specialize[@name=keyframes]<AtKeyword, "@keyframes">
+  atKw<"keyframes">
   KeyframeName { identifier | StringLiteral }
   KeyframeList
 }
@@ -66,7 +67,14 @@ KeyframeList {
 }
 
 SupportsStatement {
-  @specialize[@name=supports]<AtKeyword, "@supports"> query Block
+  atKw<"supports"> query Block
+}
+
+ScopeStatement {
+  atKw<"scope">
+  ParenthesizedSelector?
+  (@extend[@name=to]<identifier, "to"> ParenthesizedSelector)?
+  Block
 }
 
 AtRule { AtKeyword commaSep<query> (";" | Block) }
@@ -120,8 +128,10 @@ query {
   } |
   UnaryQuery { @specialize[@name=UnaryQueryOp]<queryIdentifier, "not" | "only"> query } |
   ParenthesizedQuery { "(" query ")" } |
-  SelectorQuery { @specialize[@name=selector]<queryIdentifier, "selector"> "(" selector ")" }
+  SelectorQuery { queryKw<"selector"> ParenthesizedSelector }
 }
+
+ParenthesizedSelector { "(" selector ")" }
 
 FeatureName { queryIdentifier }
 
@@ -167,6 +177,10 @@ CallExpression {
 }
 
 commaSep<value> { "" | value ("," value?)* }
+
+queryKw<name> { @specialize[@name={name}]<queryIdentifier, name> }
+
+atKw<name> { @specialize[@name={name}]<AtKeyword, "@" name> }
 
 @external tokens descendant from "./tokens" {
   descendantOp
