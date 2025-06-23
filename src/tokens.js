@@ -4,7 +4,7 @@
 import {ExternalTokenizer} from "@lezer/lr"
 import {
   identifier, callee, VariableName,
-  queryIdentifier, queryVariableName,
+  queryIdentifier, queryVariableName, QueryCallee,
   descendantOp, Unit
 } from "./parser.terms.js"
 
@@ -37,7 +37,7 @@ const identifierTokens = (id, varName, callee) => (input, stack) => {
       inside = true
     } else {
       if (inside) input.acceptToken(
-        dashes == 2 && stack.canShift(VariableName) ? varName : callee && next == parenL ? callee : id
+        dashes == 2 && stack.canShift(VariableName) ? varName : next == parenL ? callee : id
       )
       break
     }
@@ -48,7 +48,7 @@ export const identifiers = new ExternalTokenizer(
   identifierTokens(identifier, VariableName, callee)
 )
 export const queryIdentifiers = new ExternalTokenizer(
-  identifierTokens(queryIdentifier, queryVariableName)
+  identifierTokens(queryIdentifier, queryVariableName, QueryCallee)
 )
 
 export const descendant = new ExternalTokenizer(input => {

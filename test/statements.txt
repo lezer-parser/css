@@ -194,3 +194,21 @@ StyleSheet(
   ScopeStatement(scope,Block(RuleSet(ClassSelector(ClassName),Block))),
   ScopeStatement(scope,ParenthesizedSelector(TagSelector(TagName)),Block),
   ScopeStatement(scope,ParenthesizedSelector(ClassSelector(ClassName)),to,ParenthesizedSelector(ClassSelector(ClassName)),Block))
+
+# If Expressions
+
+p {
+  background-color: if(
+    style(--color: white): black;
+    supports(foo: bar): red;
+    else: pink
+  );
+}
+
+==>
+
+StyleSheet(RuleSet(TagSelector(TagName),Block(
+  Declaration(PropertyName,IfExpression(if,ArgList(
+    IfBranch(CallQuery(QueryCallee,ArgList(FeatureName,ValueName)),ValueName),
+    IfBranch(CallQuery(QueryCallee,ArgList(FeatureName,ValueName)),ValueName),
+    IfBranch(KeywordQuery,ValueName)))))))

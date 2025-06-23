@@ -31,7 +31,10 @@ RuleSet {
 ImportStatement {
   atKw<"import">
   value
-  Layer { queryKw<"layer"> (!layerName "(" LayerName ("." LayerName)* ")")? }?
+  Layer {
+    queryCalleeKw<"layer"> (!layerName "(" LayerName ("." LayerName)* ")")? |
+    queryKw<"layer">
+  }?
   commaSep<query> ";"
 }
 
@@ -128,7 +131,8 @@ query {
   } |
   UnaryQuery { @specialize[@name=UnaryQueryOp]<queryIdentifier, "not" | "only"> query } |
   ParenthesizedQuery { "(" query ")" } |
-  SelectorQuery { queryKw<"selector"> ParenthesizedSelector }
+  SelectorQuery { queryCalleeKw<"selector"> ParenthesizedSelector } |
+  CallQuery { QueryCallee ArgList<FeatureName ":" value+ | query> }
 }
 
 ParenthesizedSelector { "(" selector ")" }
@@ -146,6 +150,7 @@ value {
   StringLiteral |
   BinaryExpression { value !valueOp BinOp value } |
   CallExpression |
+  IfExpression |
   CallLiteral
 }
 
@@ -161,6 +166,14 @@ queryValue {
   NumberLiteral |
   StringLiteral
 }
+
+IfExpression {
+  @specialize[@name=if]<callee, "if"> ArgList {
+    "(" (IfBranch ";")* IfBranch ";"? ")"
+  }
+}
+
+IfBranch { query ":" value }
 
 CallLiteral {
   @specialize[@name=CallTag]<callee, "url" | "url-prefix" | "domain" | "regexp">
@@ -184,6 +197,7 @@ CallExpression {
 commaSep<value> { "" | value ("," value?)* }
 
 queryKw<name> { @specialize[@name={name}]<queryIdentifier, name> }
+queryCalleeKw<name> { @specialize[@name={name}]<QueryCallee, name> }
 
 atKw<name> { @specialize[@name={name}]<AtKeyword, "@" name> }
 
@@ -204,7 +218,8 @@ atKw<name> { @specialize[@name={name}]<AtKeyword, "@" name> }
 @external tokens queryIdentifiers from "./tokens" {
   @conflict { identifier, VariableName, callee }
   queryIdentifier,
-  queryVariableName[@name=VariableName]
+  queryVariableName[@name=VariableName],
+  QueryCallee
 }
 
 @tokens {
