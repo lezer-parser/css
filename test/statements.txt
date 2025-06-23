@@ -173,12 +173,14 @@ StyleSheet(RuleSet(TagSelector(TagName),Block),Comment)
 #foo\ bar {
   --weird\\var: 5px;
   width: var(--weird\\var);
+  c\6f lor: b\6c ue;
 }
 ==>
 
 StyleSheet(RuleSet(IdSelector(IdName),Block(
   Declaration(VariableName,NumberLiteral(Unit)),
-  Declaration(PropertyName,CallExpression(Callee,ArgList(VariableName))))))
+  Declaration(PropertyName,CallExpression(Callee,ArgList(VariableName))),
+  Declaration(PropertyName, ValueName))))
 
 # Scope
 

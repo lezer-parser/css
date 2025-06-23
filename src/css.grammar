@@ -119,7 +119,7 @@ Declaration {
 query {
   KeywordQuery { queryIdentifier } |
   FeatureQuery { "(" FeatureName ":" value+ ")" } |
-  BinaryQuery { query !valueOp LogicOp query } |
+  BinaryQuery { query !valueOp @specialize[@name=LogicOp]<queryIdentifier, "or" | "and"> query } |
   ComparisonQuery {
     "("
     (queryValue | FeatureName) !valueCompareOp CompareOp (queryValue | FeatureName)
@@ -156,12 +156,10 @@ token {
 }
 
 queryValue {
-  VariableName |
+  queryVariableName |
   ColorLiteral |
   NumberLiteral |
-  StringLiteral |
-  CallExpression |
-  CallLiteral
+  StringLiteral
 }
 
 CallLiteral {
@@ -198,10 +196,15 @@ atKw<name> { @specialize[@name={name}]<AtKeyword, "@" name> }
 }
 
 @external tokens identifiers from "./tokens" {
-  callee,
   identifier,
-  VariableName,
-  queryIdentifier
+  callee,
+  VariableName
+}
+
+@external tokens queryIdentifiers from "./tokens" {
+  @conflict { identifier, VariableName, callee }
+  queryIdentifier,
+  queryVariableName[@name=VariableName]
 }
 
 @tokens {
@@ -218,8 +221,6 @@ atKw<name> { @specialize[@name={name}]<AtKeyword, "@" name> }
   CompareOp { $[<>] "="? | "=" }
 
   SiblingOp { "~" | "+" }
-
-  LogicOp { "and" | "or" }
 
   BinOp { $[+\-*/] }
 

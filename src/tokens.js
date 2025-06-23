@@ -2,7 +2,11 @@
    expressed by Lezer's built-in tokenizer. */
 
 import {ExternalTokenizer} from "@lezer/lr"
-import {callee, identifier, VariableName, queryIdentifier, descendantOp, Unit} from "./parser.terms.js"
+import {
+  identifier, callee, VariableName,
+  queryIdentifier, queryVariableName,
+  descendantOp, Unit
+} from "./parser.terms.js"
 
 const space = [9, 10, 11, 12, 13, 32, 133, 160, 5760, 8192, 8193, 8194, 8195, 8196, 8197,
                8198, 8199, 8200, 8201, 8202, 8232, 8233, 8239, 8287, 12288]
@@ -13,7 +17,9 @@ function isAlpha(ch) { return ch >= 65 && ch <= 90 || ch >= 97 && ch <= 122 || c
 
 function isDigit(ch) { return ch >= 48 && ch <= 57 }
 
-export const identifiers = new ExternalTokenizer((input, stack) => {
+function isHex(ch) { return isDigit(ch) || ch >= 97 && ch <= 102 || ch >= 65 && ch <= 70 }
+
+const identifierTokens = (id, varName, callee) => (input, stack) => {
   for (let inside = false, dashes = 0, i = 0;; i++) {
     let {next} = input
     if (isAlpha(next) || next == dash || next == underscore || (inside && isDigit(next))) {
@@ -22,18 +28,28 @@ export const identifiers = new ExternalTokenizer((input, stack) => {
       input.advance()
     } else if (next == backslash && input.peek(1) != newline) {
       input.advance()
-      if (input.next > -1) input.advance()
+      if (isHex(input.next)) {
+        do { input.advance() } while (isHex(input.next))
+        if (input.next == 32) input.advance()
+      } else if (input.next > -1) {
+        input.advance()
+      }
       inside = true
     } else {
       if (inside) input.acceptToken(
-        dashes == 2 && stack.canShift(VariableName) ? VariableName
-          : stack.canShift(queryIdentifier) ? queryIdentifier
-          : next == parenL ? callee
-          : identifier)
+        dashes == 2 && stack.canShift(VariableName) ? varName : callee && next == parenL ? callee : id
+      )
       break
     }
   }
-})
+}
+
+export const identifiers = new ExternalTokenizer(
+  identifierTokens(identifier, VariableName, callee)
+)
+export const queryIdentifiers = new ExternalTokenizer(
+  identifierTokens(queryIdentifier, queryVariableName)
+)
 
 export const descendant = new ExternalTokenizer(input => {
   if (space.includes(input.peek(-1))) {
