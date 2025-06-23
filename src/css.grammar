@@ -138,14 +138,21 @@ FeatureName { queryIdentifier }
 value {
   VariableName |
   ValueName { identifier } |
-  ParenthesizedValue { "(" value ")" } |
+  ParenthesizedValue { "(" token* ")" } |
+  BracketedValue { "[" token* "]" } |
+  BracedValue { "{" token* "}" } |
   ColorLiteral |
   NumberLiteral |
   StringLiteral |
   BinaryExpression { value !valueOp BinOp value } |
   CallExpression |
-  CallLiteral |
-  LineNames { "[" LineName { identifier }* "]" }
+  CallLiteral
+}
+
+token {
+  value |
+  AtKeyword |
+  "#" | ";" | "." | ":"    
 }
 
 queryValue {
@@ -233,6 +240,8 @@ atKw<name> { @specialize[@name={name}]<AtKeyword, "@" name> }
   numberLiteralInner { ("+" | "-")? (@digit+ ("." @digit*)? | "." @digit+) (("e" | "E") ("+" | "-")? @digit+)? }
 
   @precedence { numberLiteralInner, BinOp, SiblingOp }
+
+  @precedence { numberLiteralInner, "." }
 
   StringLiteral[isolate] { "\"" (!["\n\\] | "\\" _)* "\"" | "'" (!['\n\\] | "\\" _)* "'" }
 

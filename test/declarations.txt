@@ -180,3 +180,14 @@ p {
 ==>
 
 StyleSheet(RuleSet(TagSelector(TagName),Block(Declaration(VariableName))))
+
+# Bracketed values
+
+div {
+  --myvar: [ some: value; ]
+}
+
+==>
+
+StyleSheet(RuleSet(TagSelector(TagName),Block(
+  Declaration(VariableName,BracketedValue("[", ValueName, ":", ValueName, ";", "]")))))
