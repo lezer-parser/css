@@ -1,6 +1,7 @@
 @precedence {
   attribute @left,
   structure @left,
+  call,
   valueCompareOp,
   valueOp @left,
   layerName
@@ -181,7 +182,7 @@ CallLiteral {
 }
 
 CallExpression {
-  Callee { callee } ArgList<value+>
+  (Callee { callee } | VariableName) !call ArgList<value+>
 }
 
 @skip {} {

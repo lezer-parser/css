@@ -191,3 +191,14 @@ div {
 
 StyleSheet(RuleSet(TagSelector(TagName),Block(
   Declaration(VariableName,BracketedValue("[", ValueName, ":", ValueName, ";", "]")))))
+
+# Call to variables
+
+.foo {
+  box-shadow: --shadow(blue);
+}
+
+==>
+
+StyleSheet(RuleSet(ClassSelector(ClassName),Block(
+  Declaration(PropertyName,CallExpression(VariableName,ArgList(ValueName))))))
