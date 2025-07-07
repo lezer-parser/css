@@ -1,3 +1,19 @@
+## 1.3.0 (2025-07-07)
+
+### Bug fixes
+
+Values wrapped in brackets can now contain more types of tokens.
+
+Properly support hex escapes in identifiers.
+
+Support variable names as callees in call expressions.
+
+### New features
+
+Add support for `@scope` syntax.
+
+Add support for `if` notation.
+
 ## 1.2.1 (2025-05-15)
 
 ### Bug fixes
