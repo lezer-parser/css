@@ -1,3 +1,9 @@
+## 1.3.1 (2026-02-16)
+
+### Bug fixes
+
+Fix parsing of blocks after nested pseudo-class selectors.
+
 ## 1.3.0 (2025-07-07)
 
 ### Bug fixes
