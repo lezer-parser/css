@@ -83,7 +83,7 @@ ScopeStatement {
 
 AtRule { AtKeyword commaSep<query> (";" | Block) }
 
-Block { "{" blockContent "}" }
+Block[@dynamicPrecedence=1] { "{" blockContent "}" }
 
 blockContent { ~item item* (Declaration (";" ~item item* Declaration?)*)? }
 

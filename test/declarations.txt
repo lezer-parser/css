@@ -202,3 +202,4 @@ StyleSheet(RuleSet(TagSelector(TagName),Block(
 
 StyleSheet(RuleSet(ClassSelector(ClassName),Block(
   Declaration(PropertyName,CallExpression(VariableName,ArgList(ValueName))))))
+
