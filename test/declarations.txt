@@ -213,3 +213,18 @@ StyleSheet(RuleSet(ClassSelector(ClassName),Block(
 
 StyleSheet(AtRule(AtKeyword,PseudoQuery,Block(
   Declaration(PropertyName,NumberLiteral(Unit),NumberLiteral(Unit)))))
+
+# Font Feature Values
+
+@font-feature-values Font Name {
+  font-display: swap;
+  @styleset {
+    nice-style: 12;
+  }
+}
+
+==>
+
+StyleSheet(FontFeatureStatement("font-feature-values",FontName,Block(
+  Declaration(PropertyName,ValueName),
+  AtRule(AtKeyword,Block(Declaration(PropertyName,NumberLiteral))))))

@@ -22,6 +22,7 @@ item {
   KeyframesStatement |
   SupportsStatement |
   ScopeStatement |
+  FontFeatureStatement |
   AtRule
 }
 
@@ -78,6 +79,12 @@ ScopeStatement {
   atKw<"scope">
   ParenthesizedSelector?
   (@extend[@name=to]<identifier, "to"> ParenthesizedSelector)?
+  Block
+}
+
+FontFeatureStatement {
+  atKw<"font-feature-values">
+  FontName { identifier+ }
   Block
 }
 
