@@ -203,3 +203,13 @@ StyleSheet(RuleSet(TagSelector(TagName),Block(
 StyleSheet(RuleSet(ClassSelector(ClassName),Block(
   Declaration(PropertyName,CallExpression(VariableName,ArgList(ValueName))))))
 
+# Pseudo Page Selector
+
+@page :left {
+  margin: 2in 3in;
+}
+
+==>
+
+StyleSheet(AtRule(AtKeyword,PseudoQuery,Block(
+  Declaration(PropertyName,NumberLiteral(Unit),NumberLiteral(Unit)))))

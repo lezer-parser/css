@@ -133,7 +133,8 @@ query {
   UnaryQuery { @specialize[@name=UnaryQueryOp]<queryIdentifier, "not" | "only"> query } |
   ParenthesizedQuery { "(" query ")" } |
   SelectorQuery { queryCalleeKw<"selector"> ParenthesizedSelector } |
-  CallQuery { QueryCallee ArgList<FeatureName ":" value+ | query> }
+  CallQuery { QueryCallee ArgList<FeatureName ":" value+ | query> } |
+  PseudoQuery { (":" | "::") queryIdentifier }
 }
 
 ParenthesizedSelector { "(" selector ")" }
