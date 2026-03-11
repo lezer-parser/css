@@ -228,3 +228,11 @@ StyleSheet(AtRule(AtKeyword,PseudoQuery,Block(
 StyleSheet(FontFeatureStatement("font-feature-values",FontName,Block(
   Declaration(PropertyName,ValueName),
   AtRule(AtKeyword,Block(Declaration(PropertyName,NumberLiteral))))))
+
+# Container with name
+
+@container tall (height > 30rem) {}
+
+==>
+
+StyleSheet(AtRule(AtKeyword,KeywordQuery,ComparisonQuery(FeatureName,CompareOp,NumberLiteral(Unit)),Block))

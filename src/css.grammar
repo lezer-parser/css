@@ -88,7 +88,7 @@ FontFeatureStatement {
   Block
 }
 
-AtRule { AtKeyword commaSep<query> (";" | Block) }
+AtRule { AtKeyword (query (","? query)*)? (";" | Block) }
 
 Block[@dynamicPrecedence=1] { "{" blockContent "}" }
 
