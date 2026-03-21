@@ -211,6 +211,8 @@ queryCalleeKw<name> { @specialize[@name={name}]<QueryCallee, name> }
 
 atKw<name> { @specialize[@name={name}]<AtKeyword, "@" name> }
 
+Important { "!" "important" }
+
 @external tokens descendant from "./tokens" {
   descendantOp
 }
@@ -250,8 +252,6 @@ atKw<name> { @specialize[@name={name}]<AtKeyword, "@" name> }
   BinOp { $[+\-*/] }
 
   MatchFlag { $[SsIi] }
-
-  Important { "!important" }
 
   whitespace { @whitespace+ }
 

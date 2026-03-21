@@ -106,11 +106,14 @@ StyleSheet(RuleSet(TagSelector(TagName),Block(
 
 a {
   b: c !important;
+  d: e ! /* foo */ important;
 }
 
 ==>
 
-StyleSheet(RuleSet(TagSelector(TagName),Block(Declaration(PropertyName,ValueName,Important))))
+StyleSheet(RuleSet(TagSelector(TagName),Block(
+  Declaration(PropertyName,ValueName,Important)
+  Declaration(PropertyName,ValueName,Important(Comment)))))
 
 # Comments right after numbers
 
