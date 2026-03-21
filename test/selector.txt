@@ -148,3 +148,12 @@ a:not(:hover) {}
 StyleSheet(
   RuleSet(PseudoClassSelector(TagSelector(TagName),":",PseudoClassName,ArgList(PseudoClassSelector(":",PseudoClassName))),Block),
   RuleSet(PseudoClassSelector(ClassSelector(ClassName),":",PseudoClassName,ArgList(ChildSelector(TagSelector(TagName),ChildOp,ClassSelector(ClassName)))),Block))
+
+# Namespaced Selector
+
+svg|circle { file: red; }
+
+==>
+
+StyleSheet(RuleSet(NamespacedTagSelector(NamespaceName,TagName),Block(
+  Declaration(PropertyName,ValueName))))

@@ -29,7 +29,7 @@ export const cssHighlighting = styleTags({
   "ParenthesizedContent StringLiteral": t.string,
   ":": t.punctuation,
   "PseudoOp #": t.derefOperator,
-  "; ,": t.separator,
+  "; , |": t.separator,
   "( )": t.paren,
   "[ ]": t.squareBracket,
   "{ }": t.brace
