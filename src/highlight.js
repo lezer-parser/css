@@ -2,7 +2,7 @@ import {styleTags, tags as t} from "@lezer/highlight"
 
 export const cssHighlighting = styleTags({
   "AtKeyword import charset namespace keyframes media supports font-feature-values": t.definitionKeyword,
-  "from to selector scope": t.keyword,
+  "from to selector scope MatchFlag": t.keyword,
   NamespaceName: t.namespace,
   KeyframeName: t.labelName,
   KeyframeRangeName: t.operatorKeyword,

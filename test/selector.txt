@@ -45,6 +45,7 @@ StyleSheet(RuleSet(IdSelector(IdName),IdSelector(TagSelector(TagName),IdName),Bl
 [b=c] {}
 [d~=e] {}
 a[b] {}
+a[href*="m" i] {}
 
 ==>
 
@@ -52,7 +53,8 @@ StyleSheet(
   RuleSet(AttributeSelector(AttributeName),Block),
   RuleSet(AttributeSelector(AttributeName,MatchOp,ValueName),Block),
   RuleSet(AttributeSelector(AttributeName,MatchOp,ValueName),Block),
-  RuleSet(AttributeSelector(TagSelector(TagName),AttributeName),Block))
+  RuleSet(AttributeSelector(TagSelector(TagName),AttributeName),Block),
+  RuleSet(AttributeSelector(TagSelector(TagName),AttributeName,MatchOp,StringLiteral,MatchFlag),Block))
 
 # Pseudo-class selectors
 
