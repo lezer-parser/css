@@ -163,3 +163,16 @@ StyleSheet(
   RuleSet(NamespacedTagSelector(NamespaceName,TagName),Block(Declaration(PropertyName,ValueName))),
   RuleSet(NamespacedTagSelector(TagName),Block()),
   RuleSet(NamespacedTagSelector(UniversalSelector,TagName),Block()))
+
+# Namespaced Attribute Selector
+
+[ns|attr] {}
+[|attr="x"] {}
+[*|attrs] {}
+
+==>
+
+StyleSheet(
+  RuleSet(AttributeSelector(NamespacedAttribute(NamespaceName,AttributeName)),Block),
+  RuleSet(AttributeSelector(NamespacedAttribute(AttributeName),MatchOp,StringLiteral),Block),
+  RuleSet(AttributeSelector(NamespacedAttribute(UniversalSelector,AttributeName)),Block))

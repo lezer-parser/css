@@ -107,7 +107,12 @@ selector {
       PseudoClassName { callee } ArgList<selector>)
   } |
   IdSelector { selector? !attribute "#" IdName { identifier } } |
-  AttributeSelector { selector? !attribute "[" AttributeName { identifier } (MatchOp value MatchFlag?)? "]" } |
+  AttributeSelector {
+    selector? !attribute "["
+    (AttributeName { identifier } |
+     NamespacedAttribute { (NamespaceName { identifier } | UniversalSelector)? "|" AttributeName { identifier } })
+    (MatchOp value MatchFlag?)? "]"
+  } |
   ChildSelector { selector? !structure ChildOp selector } |
   DescendantSelector { selector !structure descendantOp selector } |
   SiblingSelector { selector? !structure SiblingOp selector }
