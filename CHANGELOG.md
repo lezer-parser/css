@@ -1,3 +1,11 @@
+## 1.3.3 (2026-03-23)
+
+### Bug fixes
+
+Allow namespaced selectors without namespace or with `*`.
+
+Parse namespaced attributes in attribute selectors.
+
 ## 1.3.2 (2026-03-21)
 
 ### Bug fixes
