@@ -97,7 +97,7 @@ blockContent { ~item item* (Declaration (";" ~item item* Declaration?)*)? }
 selector {
   UniversalSelector |
   TagSelector { ~item TagName { identifier ~item } } |
-  NamespacedTagSelector { ~item NamespaceName { identifier } "|" TagName { identifier ~item } } |
+  NamespacedTagSelector { ~item (NamespaceName { identifier } | UniversalSelector)? "|" TagName { identifier ~item } } |
   NestingSelector |
   ClassSelector { selector? !attribute "." ClassName { identifier } } |
   PseudoClassSelector {

@@ -154,8 +154,12 @@ StyleSheet(
 # Namespaced Selector
 
 svg|circle { file: red; }
+|a {}
+*|link {}
 
 ==>
 
-StyleSheet(RuleSet(NamespacedTagSelector(NamespaceName,TagName),Block(
-  Declaration(PropertyName,ValueName))))
+StyleSheet(
+  RuleSet(NamespacedTagSelector(NamespaceName,TagName),Block(Declaration(PropertyName,ValueName))),
+  RuleSet(NamespacedTagSelector(TagName),Block()),
+  RuleSet(NamespacedTagSelector(UniversalSelector,TagName),Block()))
