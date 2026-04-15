@@ -1,3 +1,5 @@
+**This repository has moved to https://code.haverbeke.berlin/lezer/css**
+
 # @lezer/css
 
 This is a CSS grammar for the
